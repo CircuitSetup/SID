@@ -2,26 +2,26 @@
 
 This repository holds the most current firmware for CircuitSetup's magnificent [SID](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/) kit. The SID, also known as "Field Containment System Display", is an important part of Doc Brown's Delorean Time Machine.
 
-The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone, or in connection with CircuitSetup's [Time Circuits Display](https://tcd.out-a-ti.me). It's made of metal and perfectly fit for mounting in an actual Delorean.
+The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone, or in connection with CircuitSetup's [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display). It's made of metal and perfectly fit for mounting in an actual Delorean.
 
 ![mysid](img/mysid.jpg)
 
 Features include
 - various idle patterns
-- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://tcd.out-a-ti.me) or via [MQTT](#home-assistant--mqtt)
+- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display) or via [MQTT](#home-assistant--mqtt)
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - Spectrum Analyzer mode via built-in microphone
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchonized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchonized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
 
 ## Installation
 
-If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/sid-A10001986.ino.nodemcu-32s.bin](https://github.com/realA10001986/SID/blob/main/install/sid-A10001986.ino.nodemcu-32s.bin)).
+If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update" and select the pre-compiled binary file provided in this repository ([install/sid-A10001986.ino.nodemcu-32s.bin](https://github.com/CircuitSetup/SID/blob/main/install/sid-A10001986.ino.nodemcu-32s.bin)).
 
-If you are using a fresh ESP32 board, please see [sid-A10001986.ino](https://github.com/realA10001986/SID/blob/main/sid-A10001986/sid-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
+If you are using a fresh ESP32 board, please see [sid-A10001986.ino](https://github.com/CircuitSetup/SID/blob/main/sid-A10001986/sid-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
 
  *Important: After a firmware update, a "wait" symbol (hourglass) might be shown for a short while after reboot. Do NOT unplug the device during this time.*
 
@@ -39,7 +39,7 @@ The first step is to establish access to the SID's configuration web site ("Conf
 
 As long as the device is unconfigured, it creates a WiFi network of its own named "SID-AP". This is called "Access point mode", or "AP-mode". 
 
-It is ok to leave the SID in this mode, especially if it run stand-alone. In a typical home setup and/or if you also have a [Time Circuits Display](https://tcd.out-a-ti.me), however, you might want to connect the SID to a WiFi network (in case of using it together with a TCD: to the same WiFi network the TCD is connected to). If you have your SID, along with a Time Circuits Display, mounted in a car, you might want to connect the SID to the TCD's very own WiFi network "TCD-AP"; see [here](#car-setup).
+It is ok to leave the SID in this mode, especially if it run stand-alone. In a typical home setup and/or if you also have a [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display), however, you might want to connect the SID to a WiFi network (in case of using it together with a TCD: to the same WiFi network the TCD is connected to). If you have your SID, along with a Time Circuits Display, mounted in a car, you might want to connect the SID to the TCD's very own WiFi network "TCD-AP"; see [here](#car-setup).
 
 In order to connect your SID to a WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
 
@@ -241,7 +241,7 @@ In order to only disable the supplied IR remote control, check the option **_Dis
     </tr>
 </table>
 
-[Here](https://github.com/realA10001986/SID/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
+[Here](https://github.com/CircuitSetup/SID/blob/main/CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
 ## Time travel
 
@@ -361,11 +361,11 @@ Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domain
 
 ## Car setup
 
-If your SID, along with a [Time Circuits Display](https://tcd.out-a-ti.me), is mounted in a car, the following network configuration is recommended:
+If your SID, along with a [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display), is mounted in a car, the following network configuration is recommended:
 
 #### TCD
 
-- Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
+- Run your TCD in [*car mode*](https://github.com/CircuitSetup/Time-Circuits-Display/#car-mode);
 - disable WiFi power-saving on the TCD by setting **_WiFi power save timer for AP-mode_** to 0 (zero).
 
 #### SID
