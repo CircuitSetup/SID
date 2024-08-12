@@ -13,6 +13,7 @@ Features include
 - Spectrum Analyzer mode via built-in microphone
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
 - [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchonized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
@@ -83,7 +84,7 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
 ## Basic Operation
 
-When the SID is idle, it shows an idle pattern. There are alternative idle patterns to choose from, selected by *10OK through *14OK on the remote, or via MQTT. If an SD card is present, the setting will be persistent accross reboots.
+When the SID is idle, it shows an idle pattern. There are alternative idle patterns to choose from, selected by *10OK through *14OK on the remote, or via MQTT. If an SD card is present, the setting will be persistent across reboots.
 
 If the option **_Adhere strictly to movie patterns_** is set (which is the default), the idle patterns #0 through #3 will only use patterns extracted from the movies (plus some interpolations); the same goes for when [GPS speed](#bttf-network-bttfn) is used. If this option is unset, random variations are shown, which is less boring, but also less accurate.
 
@@ -103,7 +104,9 @@ Each time you press a (recognized) key on the remote, an IR feedback LED will br
 
 ### IR learning
 
-Your SID can learn the codes of another IR remote control. Most remotes with a carrier signal of 38kHz (which most IR remotes use) will work. However, some remote controls, expecially ones for TVs, send keys repeatedly and/or send different codes alternately. If you had the SID learn a remote and the keys are not (always) recognized afterwards or appear to the pressed repeatedly while held, that remote is of that type and cannot be used.
+Your SID can learn the codes of another IR remote control. Most remotes with a carrier signal of 38kHz (which most IR remotes use) will work. However, some remote controls, especially ones for TVs, send keys repeatedly and/or send different codes alternately. If you had the SID learn a remote and the keys are not (always) recognized afterwards or appear to the pressed repeatedly while held, that remote is of that type and cannot be used.
+
+IR Learning requires a physical [Time Travel](#time-travel) button.
 
 First, go to the Config Portal, uncheck **_TCD connected by wire_** on the Setup page and save. The SID reboots. Afterwards, to start the learning process, hold the [Time Travel](#time-travel) button for a few seconds, until the displays shows "GO" followed by "0". Then press "0" on your remote, which the SID will visually acknowledge by displaying the next key to press. Then press "1", wait for the acknowledgement, and so on. Enter your keys in the following order:
 
@@ -111,15 +114,15 @@ First, go to the Config Portal, uncheck **_TCD connected by wire_** on the Setup
 
 If your remote control lacks the \* (starts command sequence) and \# (aborts command sequence) keys, you can use any other key, of course. \* could be eg. "menu" or "setup", \# could be "exit" or "return".
 
-If no key is pressed for 10 seconds, the learning process aborts, as does briefly pressing the Time Travel button. In thoses cases, the keys already learned are forgotten and nothing is saved.
+If no key is pressed for 10 seconds, the learning process aborts, as does briefly pressing the Time Travel button. In those cases, the keys already learned are forgotten and nothing is saved.
 
 To make the SID forget a learned IR remote control, type *654321 followed by OK.
 
 ### Locking IR control
 
-You can have your SID ignore IR commands from any IR remote control (be it the default supplied one, be it one you had the SID learn) by entering *71 followed by OK. After this sequence the SID will ignore all IR commands until *71OK is entered again. The purpose of this function is to enable you to use the same IR control for your SID and other props (such as Flux Capacitor).
+You can have your SID ignore IR commands from any IR remote control (be it the default supplied one, be it one you had the SID learn) by entering *71 followed by OK. After this sequence, the SID will ignore all IR commands until *71OK is entered again. The purpose of this function is to enable you to use the same remote for your SID and other props (such as the Flux Capacitor).
 
-Note that the status of the IR lock is saved 10 seconds after its last change, and is persistent accross reboots.
+Note that the status of the IR lock is saved 10 seconds after its last change, and is persistent across reboots.
 
 In order to only disable the supplied IR remote control, check the option **_Disable supplied IR remote control_** in the [Config Portal](#-disable-supplied-ir-remote-control). In that case, any learned remote will still work.
 
@@ -170,7 +173,7 @@ In order to only disable the supplied IR remote control, check the option **_Dis
     <tr>
      <td align="center" colspan="3">Special sequences<br>(&#9166; = OK key)</td>
     </tr>
-   <tr><td>Function</td><td>Code on IR</td><td>Code on TCD</td></tr>
+   <tr><td>Function</td><td>Code on remote</td><td>Code on TCD</td></tr>
     <tr>
      <td align="left">Default idle pattern</td>
      <td align="left">*10&#9166;</td><td>6010</td>
@@ -261,7 +264,7 @@ Sticky peaks are optional, they can be switched on/off in the Config Portal and 
 
 ### Siddly
 
-Siddly is a simple game where puzzle pieces of various shapes fall down from the top. You can slide them left and right, as well as rotate them while they are falling. When the piece lands at the bottom, a new piece will appear at the top and start falling down. If a line at the bottom is completely filled with fallen pieces or parts thereof, that line will be cleared, and everything piled on top of that line will move down. The target is to keep the pile at the bottom as low as possible; the game ends when the pile is as high as the screen and no new piece has room to appear. I think you get the idea. Note that the red LEDs at the top are not part of the playfield (but show a level-progress bar instead), the field only covers the yellow and green LEDs, and that simularities of Siddly with computer games, especially older ones, exist only in your imagination.
+Siddly is a simple game where puzzle pieces of various shapes fall down from the top. You can slide them left and right, as well as rotate them while they are falling. When the piece lands at the bottom, a new piece will appear at the top and start falling down. If a line at the bottom is completely filled with fallen pieces or parts thereof, that line will be cleared, and everything piled on top of that line will move down. The target is to keep the pile at the bottom as low as possible; the game ends when the pile is as high as the screen and no new piece has room to appear. I think you get the idea. Note that the red LEDs at the top are not part of the playfield (but show a level-progress bar instead), the field only covers the yellow and green LEDs, and that similarities of Siddly with computer games, especially older ones, exist only in your imagination.
 
 ### Snake
 
@@ -271,7 +274,7 @@ Snakes like apples (at least so I have heard). You control a snake that feels a 
 
 Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards and those work fine in my experience.
 
-The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), in order to avoid [Flash Wear](#flash-wear) on the SID's ESP32. The chosen idle pattern (*1x), along with the ["strictly movie patterns"](#-adhere-strictly-to-movie-patterns) setting, is only stored on SD, so for your selection to be persistent accross reboots, an SD card is required. 
+The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), in order to avoid [Flash Wear](#flash-wear) on the SID's ESP32. The chosen idle pattern (*1x), along with the ["strictly movie patterns"](#-adhere-strictly-to-movie-patterns) setting, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required. 
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
 
@@ -529,7 +532,7 @@ If checked, the SID will connect to the broker (if configured) and send and rece
 
 ##### &#9654; Broker IP[:port] or domain[:port]
 
-The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifiying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
 
 ##### &#9654; User[:Password]
 
