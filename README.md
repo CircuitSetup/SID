@@ -1,4 +1,4 @@
-# Firmware for Status Indicator Display (SID)
+# Status Indicator Display (SID)
 
 This [repository](https://sid.out-a-ti.me) holds the most current firmware for CircuitSetup's magnificent [SID](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/) kit. The SID, also known as "Field Containment System Display", is an important part of Doc Brown's Delorean Time Machine.
 
@@ -12,8 +12,7 @@ Features include
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - Spectrum Analyzer mode via built-in microphone
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchonized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power and remote control through TCD keypad
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad, or &#127381; [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
@@ -226,6 +225,10 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="left">Display current IP address</td>
      <td align="left">*90&#9166;</td><td>6090</td>
     </tr>
+  <tr>
+     <td align="left">Enter TCD keypad remote control mode</td>
+     <td align="left">*96&#9166;</td><td>6096</td>
+    </tr>
    <tr>
      <td align="left">Set brightness level (00-15)</td>
      <td align="left">*400&#9166; - *415&#9166;</td><td>6400-6415</td>
@@ -272,7 +275,7 @@ Snakes like apples (at least so I have heard). You control a snake that feels a 
 
 ## SD card
 
-Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards and those work fine in my experience.
+Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend SDHC cards work fine in my experience.
 
 The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), in order to avoid [Flash Wear](#flash-wear) on the SID's ESP32. The chosen idle pattern (*1x), along with the ["strictly movie patterns"](#-adhere-strictly-to-movie-patterns) setting, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required. 
 
@@ -298,11 +301,26 @@ Afterwards, the SID and the TCD can communicate wirelessly and
 - play time travel sequences in sync,
 - both play an alarm-sequence when the TCD's alarm occurs,
 - the SID can be remote controlled through the TCD's keypad (command codes 6xxx),
+- the SID can remote control the TCD's keypad (see [below](#remote-controlling-the-tcds-keypad))
 - the SID queries the TCD for GPS speed if desired to adapt its idle pattern to GPS speed,
 - the SID queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing "0" on the IR remote control or the SID's Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
 You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant--mqtt).
+
+#### Remote controlling the TCD's keypad
+
+The SID can, through its IR remote control, remote control the TCD keypad. The TCD will react to pressing a key on the IR remote as if that key was pressed on the TCD keypad.
+
+In order to start TCD keypad remote control, type *96OK on the SID's IR remote control.
+
+Keys 0-9 as well as OK (=ENTER) will now be registrered by the TCD as key presses.
+
+In order to remotely "hold" a key, press * followed by the key, for instance *1 (in order to toggle the TCD alarm). Note: Only keys 0-9 can be held.
+
+Pressing # quits TCD keypad remote control mode.
+
+>Since the TCD itself can remote control every other compatible prop (3xxx = Flux Capacitor, 6xxx = SID, 7xxx = Futaba Remote Control, 8xxx = VSR, 9xxx = Dash Gauges), and the IR remote can emulate the TCD keypad, it can essentially remote control every other prop.
 
 ### Connecting a TCD by wire
 
