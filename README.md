@@ -6,13 +6,17 @@ The hardware is available [here](https://circuitsetup.us/product/delorean-time-m
 
 ![mysid](img/mysid.jpg)
 
+| [![Watch the video](https://img.youtube.com/vi/1HX0PiZ1YL0/0.jpg)](https://youtu.be/1HX0PiZ1YL0) |
+|:--:|
+| Click to watch the video |
+
 Features include
 - various idle patterns
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display) or via [MQTT](#home-assistant--mqtt)
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - Spectrum Analyzer mode via built-in microphone
 - Advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad, or &#127381; [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad, or [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
@@ -295,7 +299,7 @@ Note that the TCD's firmware must be up to date for BTTFN. You can use [this](ht
 
 ![BTTFN connection](img/family-wifi-bttfn.png)
 
-In order to connect your SID to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. Note that you need TCD firmware 2.9.1 or later for using a hostname; previous versions only work with an IP address.
+In order to connect your SID to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. 
 
 Afterwards, the SID and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
