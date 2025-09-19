@@ -20,6 +20,7 @@ Features include
 - [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
+- built-in OTA installer for firmware updates
 
 ## Installation
 
@@ -35,23 +36,35 @@ If you are using a fresh ESP32 board, please see [sid-A10001986.ino](https://git
 
 The first step is to establish access to the SID's configuration web site ("Config Portal") in order to configure your SID:
 
-- Power up the SID and wait until the startup sequence has completed.
+- Power up your SID and wait until the startup sequence has completed.
 - Connect your computer or handheld device to the WiFi network "SID-AP".
 - Navigate your browser to http://sid.local or http://192.168.4.1 to enter the Config Portal.
 
 #### Connecting to a WiFi network
 
-As long as the device is unconfigured, it creates a WiFi network of its own named "SID-AP". This is called "Access point mode", or "AP-mode". 
+Your SID knows two ways of WiFi operation: Either it creates its own WiFi network, or it connects to a pre-existing WiFi network.
 
-It is ok to leave the SID in this mode, especially if it run stand-alone. In a typical home setup and/or if you also have a [Time Circuits Display](https://github.com/CircuitSetup/Time-Circuits-Display), however, you might want to connect the SID to a WiFi network (in case of using it together with a TCD: to the same WiFi network the TCD is connected to). If you have your SID, along with a Time Circuits Display, mounted in a car, you might want to connect the SID to the TCD's very own WiFi network "TCD-AP"; see [here](#car-setup).
+As long as your SID is unconfigured, it creates its own WiFi network named "SID-AP". This mode of operation is called "Access point mode", or "AP-mode". 
 
-In order to connect your SID to a WiFi network, click on "Configure WiFi". The bare minimum is to select an SSID (WiFi network name) and a WiFi password.
+It is ok to leave it in AP-mode, predominantly if used stand-alone. (To operate your SID in AP-mode, do not configure a WiFi network as described below, or click on "Erase WiFi config" on the Config Portal's main page.)
 
->Note that the SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until the SID has completed its startup sequence, then type \*123456OK on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
+>For experts: In the following, the term "WiFi network" is used for both "WiFi network" and "ip network" for simplicity reasons. However, for BTTFN/MQTT communication, the devices must (only) be on the same ip network, regardless of how they take part in it: They can be can be connected to different WiFi networks, if those WiFi networks are part of the same ip network, or, in case of the MQTT broker, by wire. If the TCD operates as access point for other props, connecting a prop to the TCD's WiFi network also takes care of suitable ip network configuration through DHCP.
 
-After saving the WiFi network settings, the SID reboots and tries to connect to your configured WiFi network. If that fails, it will again start in access point mode.
+##### &#9654; Home setup with a pre-existing local WiFi network
 
-After completing this step, your SID is basically ready for use; you can also continue configuring it to your personal preferences through the Config Portal.
+In this case, you can connect your SID to your home WiFi network: Click on "Connect to WiFi" and either select a network from the top of the page or enter a WiFi network name (SSID), and enter your WiFi password. After saving the WiFi network settings, your SID reboots and tries to connect to your selected WiFi network. If that fails, it will again start in access point mode.
+
+>If you have a [Time Circuits Display](https://tcd.out-a-ti.me) note that in order to have both SID and TCD communicate with each other, your SID must be connected to the same ip network your TCD is connected to. In order to use MQTT, your SID must be connected to the same ip network your broker is connected to.
+
+>Your SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until it has completed its startup sequence, then type \*123456OK on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
+
+##### &#9654; Places without a WiFi network
+
+If no TCD is present, keep your SID operating in AP-mode.
+
+If you have a [Time Circuits Display](https://tcd.out-a-ti.me), you can connect your SID to the TCD's own WiFi network: Click on "Connect to WiFi" and either select "TCD-AP" from the top of the page or enter "TCD-AP" under *WiFi network name (SSID)*. If you password-proteced your TCD-AP, enter this password below. See [here](#car-setup) for more details.
+
+After completing WiFi setup, your SID is ready for use; you can also continue configuring it to your personal preferences through the Config Portal.
 
 ## The Config Portal
 
@@ -70,7 +83,7 @@ It can be accessed as follows:
 
 #### If SID is connected to WiFi network
 
-- Connect your hand-held/computer to the same WiFi network to which the SID is connected, and
+- Connect your hand-held/computer to the same (WiFi) network to which the SID is connected, and
 - navigate your browser to http://sid.local
 
   Accessing the Config Portal through this address requires the operating system of your hand-held/computer to support Bonjour/mDNS: Windows 10 version TH2     (1511) [other sources say 1703] and later, Android 13 and later; MacOS and iOS since the dawn of time.
@@ -109,9 +122,11 @@ Each time you press a (recognized) key on the remote, an IR feedback LED will br
 
 Your SID can learn the codes of another IR remote control. Most remotes with a carrier signal of 38kHz (which most IR remotes use) will work. However, some remote controls, especially ones for TVs, send keys repeatedly and/or send different codes alternately. If you had the SID learn a remote and the keys are not (always) recognized afterwards or appear to the pressed repeatedly while held, that remote is of that type and cannot be used.
 
-IR Learning requires a physical [Time Travel](#time-travel) button.
+As of firmware 1.53, IR learning can be initiated by entering *987654 followed by OK on the standard IR remote. (The old method described below is still supported.)
 
-First, go to the Config Portal, uncheck **_TCD connected by wire_** on the Setup page and save. The SID reboots. Afterwards, to start the learning process, hold the [Time Travel](#time-travel) button for a few seconds, until the displays shows "GO" followed by "0". Then press "0" on your remote, which the SID will visually acknowledge by displaying the next key to press. Then press "1", wait for the acknowledgement, and so on. Enter your keys in the following order:
+With earlier firmware versions, IR learning required a physical [Time Travel](#time-travel) button, and the option **_TCD connected by wire_** in the Config Portal needs to be unchecked. To start the learning process, hold the [Time Travel](#time-travel) button for a few seconds. 
+
+When IR learning is started, the displays first shows "GO", immediately followed by "0". Press "0" on your remote, which the SID will visually acknowledge by displaying the next key to press. Then press "1", wait for the acknowledgement, and so on. Enter your keys in the following order:
 
 ```0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - * - # - Arrow up - Arrow down - Arrow left - Arrow right - OK``` 
 
@@ -244,6 +259,10 @@ In order to only disable the supplied IR remote control, check the option **_Dis
     <tr>
      <td align="left">Delete static IP address<br>and WiFi-AP password</td>
      <td align="left">*123456&#9166;</td><td>6123456</td>
+    </tr>
+    <tr>
+     <td align="left">Start IR remote <a href="#ir-learning">learning process</a></td>
+     <td align="left">*987654&#9166;</td><td>6987654</td>
     </tr>
     <tr>
      <td align="left">Delete learned IR remote control</td>
@@ -395,19 +414,19 @@ If your SID, along with a [Time Circuits Display](https://github.com/CircuitSetu
 
 #### SID
 
-Enter the Config Portal on the SID (as described above), click on *Setup* and
+Enter the Config Portal on the SID, click on *Setup* and
   - enter *192.168.4.1* into the field **_IP address or hostname of TCD_**
   - check the option **_Follow TCD fake power_** if you have a fake power switch for the TCD (like eg a TFC switch)
   - click on *Save*.
 
 After the SID has restarted, re-enter the SID's Config Portal (while the TCD is powered and in *car mode*) and
-  - click on *Configure WiFi*,
-  - select the TCD's access point name in the list at the top or enter *TCD-AP* into the *SSID* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
+  - click on *Connect to WiFi*,
+  - select the TCD's access point name in the list at the top ("TCD-AP") or enter *TCD-AP* into the *WiFi network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
   - click on *Save*.
 
-Using this setup enables the SID to receive notifications about time travel and alarm wirelessly, and to query the TCD for data. Also, the TCD keypad can be used to remote-control the SID.
-
 In order to access the SID's Config Portal in your car, connect your hand held or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://sid.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the SID's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
+
+This "car setup" can also be used in a home setup with no local WiFi network present.
 
 ## Flash Wear
 
@@ -419,11 +438,13 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ### Main page
 
-##### &#9654; Configure WiFi
+##### &#9654; Connect to WiFi
 
-Clicking this leads to the WiFi configuration page. On that page, you can connect your SID to your WiFi network by selecting/entering the SSID (WiFi network name) as well as a password (WPA2). By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty.
+Click this to connect your SID to your local WiFi network (which can also be provided by your [Time Circuits Display](https://tcd.out-a-ti.me) operating in AP mode/car mode). All you need to do is either to click on one of the networks listed at the top or to enter a WiFi network name (SSID), and optionally a passwort (WPAx).
 
-Note that this page has nothing to do with Access Point mode; it is strictly for connecting your SID to an existing WiFi network as a client.
+>By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. If you connect your SID to your Time Circuits Display acting as access point ("TCD-AP"), leave these all empty.
+
+Note that this page is strictly for connecting your SID to an existing WiFi network. If your SID is supposed to operate stand-alone, it runs in "access point mode" (AP-Mode). Settings for AP mode are on the *Setup* page.
 
 ##### &#9654; Setup
 
@@ -435,7 +456,7 @@ This leads to the firmware update page. You can select a locally stored firmware
 
 ##### &#9654; Erase WiFi Config
 
-Clicking this (and saying "yes" in the confirmation dialog) erases the WiFi configuration (WiFi network and password) and reboots the device; it will restart in "access point" mode. See [here](#short-summary-of-first-steps).
+Clicking this (and saying "yes" in the confirmation dialog) erases the WiFi connection configuration (as set up through the *Connect to WiFi* page) and reboots the device; it will restart in "access point" (AP) mode. See [here](#short-summary-of-first-steps).
 
 ---
 
@@ -506,7 +527,7 @@ If your SID is connected wirelessly, this option has no effect.
 
 ##### &#9654; IP address or hostname of TCD
 
-If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the IP address of the TCD here. If your TCD is running firmware version 2.9.1 or later, you can also enter the TCD's hostname here instead (eg. 'timecircuits').
+If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here.
 
 If you connect your SID to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
 
@@ -577,4 +598,5 @@ If you want copy settings from one SD card to another, do as follows:
 
 This procedure ensures that all your settings are copied from the old to the new SD card.
 
-_Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://sid.out-a-ti.me
+_Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://sid.out-a-ti.me  
+_Other props: [Time Circuits Display](https://tcd.out-a-ti.me) ... [Flux Capacitor](https://fc.out-a-ti.me) ... [Dash Gauges](https://dg.out-a-ti.me) ... [VSR](https://vsr.out-a-ti.me) ... [Remote Control](https://remote.out-a-ti.me) ... [TFC](https://tfc.out-a-ti.me)_
