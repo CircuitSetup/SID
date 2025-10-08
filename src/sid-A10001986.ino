@@ -104,7 +104,7 @@
 
 /*  Changelog
  *  
- *  2025/10/07 (A10001986) [1.56]
+ *  2025/10/07 (A10001986) [1.57]
  *    - Add emergency firmware update via SD (for dev purposes)
  *    - WM fixes (Upload, etc)
  *  2025/10/06 (A10001986)
