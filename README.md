@@ -127,7 +127,7 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
 When the SID is idle, it shows an idle pattern. There are alternative idle patterns to choose from, selected by *10OK through *14OK on the remote, or via MQTT. If an SD card is present, the setting will be persistent across reboots.
 
-If the option **_Adhere strictly to movie patterns_** is set (which is the default), the idle patterns #0 through #3 will only use patterns extracted from the movies (plus some interpolations); the same goes for when [GPS speed](#bttf-network-bttfn) is used. If this option is unset, random variations are shown, which is less boring, but also less accurate.
+If the option **_Adhere strictly to movie patterns_** is set (which is the default), the idle patterns #0 through #3 will only use patterns extracted from the movies (plus some interpolations); the same goes for when [TCD-provided speed](#bttf-network-bttfn) is used. If this option is unset, random variations are shown, which is less boring, but also less accurate.
 
 For ways to trigger a time travel, see [here](#time-travel).
 
@@ -277,6 +277,10 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="left">Enter <a href="#remote-controlling-the-tcds-keypad">TCD keypad remote control mode</a><sup>1</sup></td>
      <td align="left">*96&#9166;</td><td>6096</td>
     </tr>
+    <tr>
+     <td align="left">Quit <a href="#remote-controlling-the-tcds-keypad">TCD keypad remote control mode</a></td>
+     <td align="left">-</td><td>6097</td>
+    </tr>
    <tr>
      <td align="left">Set brightness level (00-15)</td>
      <td align="left">*400&#9166; - *415&#9166;</td><td>6400-6415</td>
@@ -363,23 +367,23 @@ Afterwards, the SID and the TCD can communicate wirelessly and
 - both play an alarm-sequence when the TCD's alarm occurs,
 - the SID can be remote controlled through the TCD's keypad (command codes 6xxx),
 - the SID can remote control the TCD's keypad (see [below](#remote-controlling-the-tcds-keypad))
-- the SID queries the TCD for GPS speed if desired to adapt its idle pattern to GPS speed,
+- the SID queries the TCD for speed (GPS, rotary encoder, Remote) if desired to adapt its idle pattern to speed,
 - the SID queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing "0" on the IR remote control or the SID's Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
-You can use BTTF-Network and MQTT at the same time, see [below](#home-assistant--mqtt).
+You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time-circuits-display).
 
 #### Remote controlling the TCD's keypad
 
 The SID can, through its IR remote control, remote control the TCD keypad. The TCD will react to pressing a key on the IR remote as if that key was pressed on the TCD keypad.
 
-In order to start TCD keypad remote control, type *96OK on the SID's IR remote control or enter 6096 on the TCD keypad.
+In order to start TCD keypad remote control, type *95OK on the SID's IR remote control (or issue command 6095 from the TCD or through [HA/MQTT](#control-the-sid-via-mqtt)).
 
 Keys 0-9 as well as OK (=ENTER) on your IR remote control will now be registered by the TCD as key presses.
 
 "Holding" a key on the TCD keypad is emulated by pressing * followed by the key, for instance *1 (in order to toggle the TCD alarm). Only keys 0-9 can be "held".
 
-Pressing # quits TCD keypad remote control mode.
+Pressing # quits TCD keypad remote control mode, as does issuing command 6097 on the TCD or through HA/MQTT.
 
 >Since the TCD itself can remote control every other compatible prop (3xxx = Flux Capacitor, 6xxx = SID, 7xxx = Futaba Remote Control, 8xxx = VSR, 9xxx = Dash Gauges), and the IR remote can emulate the TCD keypad, it can essentially remote control every other prop.
 
@@ -433,13 +437,13 @@ The SID can be controlled through messages sent to topic **bttf/sid/cmd**. Suppo
 
 #### The INJECT_x command
 
-This command allows remote control of your SID through HA/MQTT in the same way as through the TCD keypad by injecting commands in the SID's command queue (hence the name). Commands are listed [here](#special_key_sequences); nearly all are supported. The command is to be specified like the IR remote control sequence but without the "*" (or in other words: Take the TCD command code minus 6000). For example:
+This command allows remote control of your SID through HA/MQTT in the same way as through the TCD keypad by injecting commands in the SID's command queue (hence the name). Commands are listed [here](#special_key_sequences); nearly all are supported. For example:
 
-To set idle pattern #4 (*14), issue the following command: **INJECT_14**
+To set idle pattern #4 (6014), issue the following command: **INJECT_6014**
 
-To start the Spectrum Analyzer (*21), issue **INJECT_21**
+To start the Spectrum Analyzer (6021), issue **INJECT_6021**
 
-To set the brightness level to 15 (*415), issue **INJECT_415**
+To set the brightness level to 15 (6415), issue **INJECT_6415**
 
 ### Receive commands from Time Circuits Display
 
@@ -586,7 +590,7 @@ See [here](#wifi-power-saving-features).
 
 ##### &#9193; Adhere strictly to movie patterns
 
-If this option is checked, in idle modes 0-3 as well as when using GPS speed, only patterns which were extracted from the movies (plus some interpolations) are shown. If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing *50 followed by OK on the IR remote control.
+If this option is checked, in idle modes 0-3 as well as when using TCD-provided speed, only patterns which were extracted from the movies (plus some interpolations) are shown. If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing *50 followed by OK on the IR remote control.
 
 Note that this option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
 
@@ -619,7 +623,7 @@ If you want to have your SID to communicate with a Time Circuits Display wireles
 
 If you connect your SID to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
 
-##### &#9193; Adapt to GPS speed
+##### &#9193; Adapt pattern to TCD-provided speed
 
 If this option is checked and your TCD is equipped with a GPS receiver or a rotary encoder, the SID will adapt its display pattern to current GPS speed or the reading of the encoder, respectively.
 
