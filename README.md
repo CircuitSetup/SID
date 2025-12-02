@@ -17,7 +17,7 @@ Features include
 - [Spectrum Analyzer](#spectrum-analyzer) mode via built-in microphone
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
 - [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://tcd.out-a-ti.me); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad, or [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
-- [Home Assistant](#home-assistant--mqtt) (MQTT 3.1.1) support
+- [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
 - built-in OTA installer for firmware updates
@@ -413,7 +413,7 @@ For a connection by wire, connect GND and GPIO on the SID's "Time Travel" connec
 
 _Do not connect 3_3V to the TCD!_
 
-Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option "Control props connected by wire" must be set.
+Next, head to the Config Portal and set the option **_TCD connected by wire_**. On the TCD, the option [TT-OUT] _"signals Time Travel"_ must be checked.
 
 <details>
 <summary>More...</summary>
@@ -424,7 +424,7 @@ Next, head to the Config Portal and set the option **_TCD connected by wire_**. 
 
 ## Home Assistant / MQTT
 
-The SID supports the MQTT protocol version 3.1.1 for the following features:
+The SID supports MQTT protocol versions 3.1.1 and 5.0 for the following features:
 
 ### Control the SID via MQTT
 
@@ -447,9 +447,9 @@ To set the brightness level to 15 (6415), issue **INJECT_6415**
 
 ### Receive commands from Time Circuits Display
 
-If both TCD and SID are connected to the same broker, and the option **_Send time travel/alarm event notifications_** is checked on the TCD's side, the SID will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
+If both TCD and SID are connected to the same broker, and the option **_Publish time travel and alarm events_** is checked on the TCD's side, the SID will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
 
-MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Send time travel/alarm event notifications_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
+MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Publish time travel and alarm events_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
 ### Setup
 
@@ -459,9 +459,11 @@ MQTT requires a "broker" (such as [mosquitto](https://mosquitto.org/), [EMQ X](h
 
 The broker's address needs to be configured in the Config Portal. It can be specified either by domain or IP (IP preferred, spares us a DNS call). The default port is 1883. If a different port is to be used, append a ":" followed by the port number to the domain/IP, such as "192.168.1.5:1884". 
 
+If your broker supports protocol version 3.1.1, stick with 3.1.1. Version 5.0 has no advantages, but more overhead.
+
 If your broker does not allow anonymous logins, a username and password can be specified.
 
-Limitations: MQTT Protocol version 3.1.1; TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when your SID is operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
+Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when your SID is operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
 ## Car setup
 
@@ -516,6 +518,10 @@ This leads to the [WiFi configuration page](#wifi-configuration)
 ##### &#9193; Settings
 
 This leads to the [Settings page](#settings).
+
+##### &#9193; HA/MQTT Settings
+
+This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 ##### &#9193; Update
 
@@ -643,20 +649,6 @@ If the SID is connected to a TCD through BTTFN, this option allows to trigger a 
 
 If this option is checked, the SID will show current local time - as queried from the TCD - when the Screen Saver is active.
 
-#### <ins>Home Assistant / MQTT settings</ins>
-
-##### &#9193; Use Home Assistant (MQTT 3.1.1)
-
-If checked, the SID will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt)
-
-##### &#9193; Broker IP[:port] or domain[:port]
-
-The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
-
-##### &#9193; User[:Password]
-
-The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
-
 #### <ins>Settings for wired connections</ins>
 
 ##### &#9193; TCD connected by wire
@@ -697,6 +689,46 @@ This procedure ensures that all your settings are copied from the old to the new
 Check this to disable the supplied remote control; the SID will only accept commands from a learned IR remote (if applicable). 
 
 Note that this only disables the supplied remote, unlike [IR locking](#locking-ir-control), where IR commands from any known remote are ignored.
+
+### HA/MQTT Settings
+
+##### &#9193; Home Assistant support (MQTT)
+
+If checked, the SID will connect to the broker (if configured) and send and receive messages via [MQTT](#home-assistant--mqtt)
+
+##### &#9193; Broker IP[:port] or domain[:port]
+
+The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+
+##### &#9193; Protocol version
+
+The firmware supports MQTT 3.1.1 and 5.0. There is no difference in features, so there is no advantage in selecting 5.0. This was implemented only for brokers that do not support 3.1.1.
+
+##### &#9193; User[:Password]
+
+The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
+
+## Appendix B: LED signals
+
+Signals are shown in the top two rows of the display.
+
+<table>
+    <tr>
+     <td align="left">&#9675; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9675;<br>
+                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
+     <td align="left">Bad input from IR</td>
+    </tr>
+    <tr>
+     <td align="left">&#9675; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679;<br>
+                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
+     <td align="left"><a href='#remote-controlling-the-tcds-keypad'>TCD-keypad remote control mode</a> started</td>
+    </tr>
+    <tr>
+     <td align="left">&#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9675;<br>
+                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
+     <td align="left"><a href='#remote-controlling-the-tcds-keypad'>TCD-keypad remote control mode</a> ended</td>
+    </tr>
+</table>
 
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ Source: https://sid.out-a-ti.me  
