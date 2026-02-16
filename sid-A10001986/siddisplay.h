@@ -53,10 +53,14 @@
 #define _SIDDISPLAY_H
 
 // Special sequences
+#define SID_SS_STOP        0
 #define SID_SS_REMSTART    1
 #define SID_SS_REMEND      2
 #define SID_SS_IRBADINP    3
-#define SID_SS_MAX         SID_SS_IRBADINP
+#define SID_SS_IROK        4
+#define SIS_SS_UPDAVAIL    5
+#define SIS_SS_CMDSTRT     6
+#define SID_SS_MAX         (SIS_SS_CMDSTRT+10)
 
 #define SD_BUF_SIZE   16  // Buffer size in words (16bit)
 
@@ -107,6 +111,7 @@ class sidDisplay {
 
         uint8_t       _specialSig = 0;
         unsigned long _specialSigNow = 0;
+        unsigned long _specialDuration = 0;
         bool          _specialTrigger = false;
         
         uint16_t _displayBuffer[SD_BUF_SIZE];

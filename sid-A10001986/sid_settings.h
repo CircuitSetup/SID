@@ -70,8 +70,9 @@ extern uint8_t musFolderNum;
 
 #define DEF_STRICT          1     // 0: Allow random diviations from movie patterns; 1: no not
 #define DEF_SKIP_TTANIM     1     // 0: Don't skip tt anim; 1: do
-#define DEF_BOOTSA          0     // 0: Boot into IDLE, 1: Boot into Spectrum Analyzer
 #define DEF_SA_PEAKS        0     // 1: Show peaks in SA, 0: don't
+#define DEF_IRFB            1     // 0: Don't show positive IR feedback on display; 1: do
+#define DEF_IRCFB           1     // 0: Don't show command entry feedback; 1: do
 #define DEF_SS_TIMER        0     // "Screen saver" timeout in minutes; 0 = ss off
 
 #define DEF_TCD_IP          ""    // TCD ip address or hostname for BTTFN
@@ -91,8 +92,8 @@ extern uint8_t musFolderNum;
 #define DEF_DISDIR          0     // 0: Do not disable default IR remote control; 1: do
 
 struct Settings {
-    char ssid[34]           = "";
-    char pass[66]           = "";
+    char ssid[34]           = "";   // must be first
+    char pass[66]           = "";   // must be second
 
     char hostName[32]       = DEF_HOSTNAME;
     char wifiConRetries[4]  = MS(DEF_WIFI_RETRY);
@@ -102,10 +103,7 @@ struct Settings {
     char apChnl[4]          = MS(DEF_AP_CHANNEL);
     char wifiAPOffDelay[4]  = MS(DEF_WIFI_APOFFDELAY);
     
-    char strictMode[4]      = MS(DEF_STRICT);       // saved, but overruled by idlePat config file
     char skipTTAnim[4]      = MS(DEF_SKIP_TTANIM);
-    char bootSA[4]          = MS(DEF_BOOTSA);
-    char SApeaks[4]         = MS(DEF_SA_PEAKS);
     char ssTimer[6]         = MS(DEF_SS_TIMER);
     
     char tcdIP[32]          = DEF_TCD_IP;
@@ -114,14 +112,7 @@ struct Settings {
     char useFPO[4]          = MS(DEF_USE_FPO);
     char bttfnTT[4]         = MS(DEF_BTTFN_TT);
     char ssClock[4]         = MS(DEF_SS_CLK);
-    char ssClockOffNM[4]    = MS(DEF_SS_CLK_NMOFF);
-
-#ifdef SID_HAVEMQTT  
-    char useMQTT[4]         = "0";
-    char mqttVers[4]        = "0"; // 0 = 3.1.1, 1 = 5.0
-    char mqttServer[80]     = "";  // ip or domain [:port]  
-    char mqttUser[128]      = "";  // user[:pass] (UTF8)
-#endif     
+    char ssClockOffNM[4]    = MS(DEF_SS_CLK_NMOFF);    
 
     char TCDpresent[4]      = MS(DEF_TCD_PRES);
     char noETTOLead[4]      = MS(DEF_NO_ETTO_LEAD);
@@ -130,6 +121,19 @@ struct Settings {
     char sdFreq[4]          = MS(DEF_SD_FREQ);
 
     char disDIR[4]          = MS(DEF_DISDIR);
+
+#ifdef SID_HAVEMQTT  
+    char useMQTT[4]         = "0";
+    char mqttVers[4]        = "0"; // 0 = 3.1.1, 1 = 5.0
+    char mqttServer[80]     = "";  // ip or domain [:port]  
+    char mqttUser[128]      = "";  // user[:pass] (UTF8)
+#endif 
+
+    // Kludge for CP
+    char strictMode[4]      = MS(DEF_STRICT);
+    char SApeaks[4]         = MS(DEF_SA_PEAKS);
+    char PIRFB[4]           = MS(DEF_IRFB);
+    char PIRCFB[4]          = MS(DEF_IRCFB);
 };
 
 struct IPSettings {
@@ -149,22 +153,50 @@ void unmount_fs();
 void write_settings();
 bool checkConfigExists();
 
-bool loadBrightness();
-void saveBrightness(bool useCache = true);
+bool evalBool(char *s);
 
-bool loadIdlePat();
-void saveIdlePat(bool useCache = true);
-
-bool loadIRLock();
-void saveIRLock(bool useCache = true);
-
-bool saveIRKeys();
+void saveIRKeys();
 void deleteIRKeys();
+
+void loadBrightness();
+void storeBrightness();
+void saveBrightness();
+
+void loadIRLock();
+void storeIRLock();
+void saveIRLock();
+
+void loadStrict();
+void saveStrict();
+
+void loadSAPeaks();
+void saveSAPeaks();
+
+void loadPosIRFB();
+void savePosIRFB();
+
+void loadIRCFB();
+void saveIRCFB();
+
+void saveUpdAvail();
+
+void saveAllSecCP();
+
+void loadIdlePat();
+void storeIdlePat();
+void saveIdlePat();
+
+#define BOOTM_NORMAL 0
+#define BOOTM_IGNORE BOOTM_NORMAL
+#define BOOTM_SA     1
+uint8_t loadBootMode();
+void    storeBootMode(uint8_t bootMode);
+void    saveBootMode();
 
 bool loadIpSettings();
 void writeIpSettings();
 void deleteIpSettings();
 
-void copySettings();
+void moveSettings();
 
 #endif
