@@ -117,7 +117,7 @@ It can be accessed as follows:
 
   >If connecting to http://sid.local fails due to a name resolution error, you need to find out the SID's IP address: Type *90ok on the remote control; the IP address will be shown on the display. Then, on your handheld or computer, navigate to http://a.b.c.d (a.b.c.d being the IP address as shown on the SID's display) in order to enter the Config Portal.</details>
 
-In the main menu, click on "Setup" to configure your SID. 
+In the main menu, click on "Settings" to configure your SID. 
 
 | [<img src="img/cps-frag.png">](img/cp_setup.png) |
 |:--:| 
