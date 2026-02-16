@@ -146,8 +146,8 @@ Your SID comes with an IR remote control included. This remote works out-of-the-
 Each time you press a (recognized) key on the remote, an IR feedback LED will briefly light up. This LED is located at the bottom of the board.
 
 Apart from the feedback LED, your SID will also show some feedback signals on its main display:
-- By default, when initiating a command sequence by pressing \*, SID will start to show each key pressed afterwards by lighting up another red LED. This kind of feedback can be disabled using command sequence *63ok;
-- By default, after executing a command, SID will show a "success" signal. This kind of feedback can be disabled using command sequence *62ok;
+- By default, when initiating a command sequence by pressing \*, SID will start to show each key pressed afterwards by lighting up another red LED. This kind of feedback can be disabled using command sequence *63ok or in the Config Portal;
+- By default, after executing a command, SID will show a "success" signal. This kind of feedback can be disabled using command sequence *62ok or in the Config Portal;
 - If a command was unsuccessful or not recognized, a "bad input" signal will be shown.
 
 See [here](#appendix-b-led-signals) for all supported signals.
@@ -166,7 +166,7 @@ When IR learning is started, the display first shows "GO", immediately followed 
 
 If your remote control lacks the \* (starts command sequence) and \# (aborts command sequence) keys, you can use any other key, of course. \* could be eg. "menu" or "setup", \# could be "exit" or "return".
 
-If no key is pressed for 10 seconds, the learning process aborts, as does briefly pressing the Time Travel button. In those cases, the keys already learned are forgotten and nothing is saved.
+If no key is pressed for 10 seconds, the learning process aborts (as does briefly pressing the Time Travel button): The keys already learned are forgotten and nothing is saved.
 
 To make the SID forget a learned IR remote control, type *654321ok.
 
@@ -630,6 +630,18 @@ When set, the time travel sequence will not be animated (no flicker, no "moving 
 ##### &#9193; Show peaks in Spectrum Analyzer
 
 This selects the boot-up setting for showing or not showing the peaks in the Spectrum Analyzer. Can be changed anytime by typing *61ok on the IR remote control.
+
+##### &#9193; Show positive IR feedback on display
+
+If this option is checked, your SID will show a signal on its display upon a successful command sequence. 
+
+This setting can also be toggled by *62ok. This option has no impact on the small IR feedback LED at the bottom of the SID.
+
+See [here](#appendix-b-led-signals) for all supported signals.
+
+##### &#9193; Show IR command entry feedback on display
+
+If this option is checked, your SID will, upon pressing * on the IR remote control, show command sequence entry progess by lighting up another red LED on each key pressed. This setting can also be toggled by *63ok.
 
 ##### &#9193; Screen saver timer
 
