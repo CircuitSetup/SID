@@ -721,6 +721,8 @@ Check this to disable the supplied remote control; the SID will only accept comm
 
 Note that this only disables the supplied remote, unlike [IR locking](#locking-ir-control), where IR commands from any known remote are ignored.
 
+---
+
 ### HA/MQTT Settings
 
 ##### &#9193; Home Assistant support (MQTT)
