@@ -557,7 +557,7 @@ This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 This leads to the firmware update page.
 
-In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the _top_ file selector and click *Update*.
+In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the file selector and click *Update*.
 
 See also [here](#firmware-installation--firmware-update).
 
