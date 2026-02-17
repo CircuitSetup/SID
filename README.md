@@ -24,13 +24,7 @@ Features include
 
 >This [repository](https://sid.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://sid.out-a-ti.me) might be ahead in development.
 
-## Installation
-
-If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on *Update*, select the pre-compiled binary file ("xxx.bin") provided in the Release package, and click on *Update*.
-
-If you are using a fresh ESP32 board, please see [sid-A10001986.ino](https://github.com/realA10001986/SID/blob/main/sid-A10001986/sid-A10001986.ino) for detailed build and upload information, or, if you don't want to deal with source code, compilers and all that nerd stuff, go [here](https://install.out-a-ti.me) and follow the instructions.
-
-*After a firmware update, a "wait" symbol (hourglass) might be shown for a short while after reboot. Do NOT unplug the device during this time.*
+For information on updating the firmware on your SID, see [here](#firmware-installation--firmware-update).
 
 ## Initial Configuration
 
@@ -530,6 +524,19 @@ Flash memory has a somewhat limited lifetime. It can be written to only between 
 
 In order to reduce the number of write operations and thereby prolong the life of your SID, it is recommended to use a good-quality SD card and to check **_["Save secondary settings on SD"](#-save-secondary-settings-on-sd)_** in the Config Portal; some settings as well as learned IR codes are then stored on the SD card (which also suffers from wear but is easy to replace). See [here](#-save-secondary-settings-on-sd) for more information.
 
+## Firmware Installation / Firmware Update
+
+If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases), and click on *Update*.
+
+<details>
+<summary>Installing on a fresh ESP32...</summary>
+If you are using a fresh ESP32, please go <a href="https://install.out-a-ti.me">here</a> and follow the instructions, or - if you are a nerd and want to deal with source code, compilers'n'stuff - see <a href="https://github.com/realA10001986/SID/blob/main/sid-A10001986/sid-A10001986.ino">sid-A10001986.ino</a> for detailed build and upload information.
+</details>
+
+*After a firmware update, a "wait" symbol (hourglass) might be shown for a short while after reboot. Do NOT unplug the device during this time.*
+
+---
+
 ## Appendix A: The Config Portal
 
 ### Main page
@@ -548,7 +555,11 @@ This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 ##### &#9193; Update
 
-This leads to the firmware update page. You can select a locally stored firmware image file to upload (such as the ones published here in the install/ folder).
+This leads to the firmware update page.
+
+In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the _top_ file selector and click *Update*.
+
+See also [here](#firmware-installation--firmware-update).
 
 ---
 
