@@ -63,8 +63,13 @@ extern bool     strictMode;
 
 // Number of IR keys
 #define NUM_IR_KEYS 17
+#define NUM_REM_TYPES 2
+#define REM_KEYS_LEARNED 0
+#define REM_KEYS_DEFAULT 1
 
 extern bool irLocked;
+extern bool irShowPosFBDisplay;
+extern bool irShowCmdFBDisplay;
 
 extern bool TCDconnected;
 
@@ -90,6 +95,8 @@ extern bool doWakeup;
 
 extern bool sidBusy;
 
+extern bool showUpdAvail;
+
 void main_boot();
 void main_setup();
 void main_loop();
@@ -113,9 +120,6 @@ void prepareTT();
 void wakeup();
 
 void setIdleMode(int idleNo);
-
-void switch_to_idle();
-void switch_to_sa();
 
 void addCmdQueue(uint32_t command);
 void bttfn_loop();

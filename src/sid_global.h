@@ -15,10 +15,8 @@
  ***                          Version Strings                          ***
  *************************************************************************/
 
-#define SID_VERSION       "V1.63"
-#define SID_VERSION_EXTRA "JAN092026"
-
-//#define SID_DBG              // debug output on Serial
+#define SID_VERSION       "V1.70"
+#define SID_VERSION_EXTRA "FEB152026"
 
 /*************************************************************************
  ***                           Miscellaneous                           ***
@@ -33,8 +31,15 @@
 // lead" must be set, too.
 #define ETTO_LEAD 5000
 
-// Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino >= 2.x)
+// Use SPIFFS (if defined) or LittleFS (if undefined; esp32-arduino 2.x)
 //#define USE_SPIFFS
+
+/*************************************************************************
+ ***                               Debug                               ***
+ *************************************************************************/
+
+//#define SID_DBG               // Generic except below
+//#define SID_DBG_NET           // Prop network related
 
 /*************************************************************************
  ***                  esp32-arduino version detection                  ***

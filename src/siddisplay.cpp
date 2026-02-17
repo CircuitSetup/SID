@@ -282,12 +282,26 @@ static const uint16_t translator[10][20][2] =
     }   
 };
 
-#define SID_SIG_DURATION 2000
+#define SID_SIG_DURATION     2000
+#define SID_SIG_DURATION_CMD 5000
 
-static const uint16_t sigMaps[SID_SS_MAX] = {
+static const uint16_t sigMaps[SID_SS_MAX] = { // [left=right, right=left]
     0b1000000000,   // TCD-keypad remote control mode start
-    0b0000000001,   // TCD-keypad remote control mode end
-    0b1000000001    // Bad IR input
+    0b1100000000,   // TCD-keypad remote control mode end
+    0b1000000001,   // Bad IR input, or input unsuccessful
+    0b0000110000,   // IR input OK and successful
+    0b0101010101,   // Update available
+    0b0000000000,   // Start of Command entry feedback block (must be at end)
+    0b0000000001,
+    0b0000000011,
+    0b0000000111,
+    0b0000001111,
+    0b0000011111,
+    0b0000111111,
+    0b0001111111,
+    0b0011111111,
+    0b0111111111,
+    0b1111111111
 };
 
 // Store i2c address and display ID
@@ -664,7 +678,7 @@ void sidDisplay::show()
     uint16_t *tp = &_displayBuffer[0];
 
     if(_specialSig) {
-        if(millis() - _specialSigNow < SID_SIG_DURATION) {
+        if(millis() - _specialSigNow < _specialDuration) {
             superImposeSpecSig();
         } else {
             _specialSig = 0;
@@ -686,19 +700,22 @@ void sidDisplay::show()
 
 void sidDisplay::specialSig(uint8_t sig)
 {
-    if(!sig || sig > SID_SS_MAX)
+    if(sig > SID_SS_MAX)
         return;
 
-    _specialSig = sig;
-    _specialSigNow = millis();
-    _specialTrigger = true;
+    if((_specialSig = sig)) {
+        _specialSigNow = millis();
+        _specialTrigger = true;
+        _specialDuration = (sig < SIS_SS_CMDSTRT) ? SID_SIG_DURATION : SID_SIG_DURATION_CMD;
+    } else
+        _specialTrigger = false;
 }
 
 bool sidDisplay::specialTrigger()
 {
     if(!_specialTrigger) return false;
     
-    if(_specialSig && (millis() - _specialSigNow > SID_SIG_DURATION)) {
+    if(_specialSig && (millis() - _specialSigNow > _specialDuration)) {
         _specialSig = 0;
         _specialTrigger = false;
         return true;

@@ -104,6 +104,24 @@
 
 /*  Changelog
  *  
+ *  2026/02/15 (A10001986) [1.70]
+ *    - New file format settings. This version of the firmware converts old to new.
+ *    - SID will boot into either Idle or SA mode depending on what was used  
+ *      before reboot/power-down (SD card required); "Boot into SA" option removed.
+ *      Current mode is saved 10 seconds after activation (or upon fake-power-down
+ *      or a controlled reboot such as when changing settings in Config Portal)
+ *    - Add option to show positive IR feedback (=successful commands) on display.
+ *      Can be changed through Config Portal or *62 (every change is saved).
+ *    - Add option to show command entry IR feedback on display. Can be changed 
+ *      through Config Portal or *63 (every change is saved).
+ *    - Changed games IR keys: 1 new game, 5 pause, 9 quit
+ *    - "Peaks in SA" setting changes through *61 are now saved.
+ *    - Display MAC address (STA) on WiFi Configuration Page
+ *    - Avoid falling back to stand-alone mode too early when TCD stops sending
+ *      packets
+ *    - Config files are now only written if actually changed which prolongs
+ *      Flash life-span.
+ *    - Code optimizations and fixes.
  *  2026/01/09 (A10001986) [1.63]
  *    - BTTFN: Fix keep-alive logic and re-connection after a TCD-reboot.
  *  2026/01/09 (A10001986) [1.62]
@@ -504,3 +522,7 @@ void loop()
     wifi_loop();
     bttfn_loop();
 }
+
+#if defined(SID_DBG) || defined(SID_DBG_NET)
+#warning "Debug output is enabled. Binary not suitable for release."
+#endif
