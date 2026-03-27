@@ -2,7 +2,7 @@
 
 This [repository](https://sid.out-a-ti.me) holds the most current firmware for CircuitSetup's magnificent [SID](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/) kit. The SID, also known as "Field Containment System Display", is an important part of Doc Brown's Delorean Time Machine.
 
-The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone, or in connection with CircuitSetup's [Time Circuits Display](https://tcd.out-a-ti.me). It's made of metal and perfectly fit for mounting in an actual Delorean. A testament to its build quality and accuracy is the fact that it is used in the movies-based, official musicals on tour (2025-2026).
+The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone, or in connection with CircuitSetup's [Time Circuits Display](https://tcd.out-a-ti.me). It's made of metal and perfectly fit for mounting in an actual Delorean. A testament to its build quality and accuracy is the fact that it is used in the **movie-based, official musicals on tour** (2024-2026).
 
 ![mysid](img/mysid.jpg)
 
@@ -68,6 +68,8 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 <details>
 <summary>More...</summary>
   
+>If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it, or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+
 >Your SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until it has completed its startup sequence, then type \*123456ok on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
 
 </details>
@@ -468,6 +470,12 @@ If both TCD and SID are connected to the same broker, and the option **_Publish 
 
 MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Publish time travel and alarm events_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
+### Display messages
+
+Your SID can subscribe to a user-configured topic and display short messages received for this topic on its display. This can be used to display the status of other HA/MQTT devices, for instance alarm systems. 
+
+Only characters a-z/A-Z/0-9 are supported, the maximum length is - given the nature of the display - eight characters.
+
 ### Setup
 
 MQTT requires a "broker" (such as [mosquitto](https://mosquitto.org/), [EMQ X](https://www.emqx.io/), [Cassandana](https://github.com/mtsoleimani/cassandana), [RabbitMQ](https://www.rabbitmq.com/), [Ejjaberd](https://www.ejabberd.im/), [HiveMQ](https://www.hivemq.com/) to name a few).
@@ -501,7 +509,7 @@ Enter the Config Portal on the SID, click on *Settings* and
 
 After the SID has restarted, re-enter the SID's Config Portal (while the TCD is powered and in *car mode*) and
   - click on *WiFi Configuration*,
-  - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "WiFi Scan") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
+  - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "Scan for Networks") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
   - click on *Save*.
 
 In order to access the SID's Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://sid.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the SID's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
@@ -526,7 +534,7 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ## Firmware Installation / Firmware Update
 
-If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases), and click on *Update*.
+If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases), and click on *Update*.
 
 <details>
 <summary>Installing on a fresh ESP32...</summary>
@@ -557,7 +565,7 @@ This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 This leads to the firmware update page.
 
-In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986.ino.nodemcu-32s.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the file selector and click *Update*.
+In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the file selector and click *Update*.
 
 See also [here](#firmware-installation--firmware-update).
 
@@ -569,9 +577,11 @@ Through this page you can either connect your SID to your local WiFi network, or
 
 #### <ins>Connecting to an existing WiFi network</ins>
 
-In order to connect your SID to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __password__ (WPAx). If there is no list displayed, click on "WiFi Scan".
+In order to connect your SID to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __password__ (WPAx). If there is no list displayed, click on "Scan for Networks".
 
 >By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. If you connect your SID to your Time Circuits Display acting as access point ("TCD-AP"), leave these all empty.
+
+If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it, or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
@@ -588,10 +598,6 @@ _This setting applies to both AP-mode and when your SID is connected to a WiFi n
 ##### &#9193; WiFi connection attempts
 
 Number of times the firmware tries to reconnect to a WiFi network, before falling back to AP-mode. See [here](#connecting-to-a-wifi-network)
-
-##### &#9193; WiFi connection timeout
-
-Number of seconds before a timeout occurs when connecting to a WiFi network. When a timeout happens, another attempt is made (see immediately above), and if all attempts fail, the device falls back to AP-mode. See [here](#connecting-to-a-wifi-network)
 
 #### <ins>Settings for AP-mode</ins>
 
@@ -611,7 +617,7 @@ Here you can select one out of 11 channels, or have the SID choose a random chan
 
 WiFI channel selection is key for a trouble-free operation. Disturbed WiFi communication can lead to disrupted sequences, packet loss, hanging or freezing props, and other problems. A good article on WiFi channel selection is [here](https://community.ui.com/questions/Choosing-the-right-Wifi-Channel-on-2-4Ghz-Why-Conventional-Wisdom-is-Wrong/ea2ffae0-8028-45fb-8fbf-60569c6d026d).
 
-If a WiFi Scan was done (which can be triggered by clicking "WiFI Scan"), 
+If a WiFi Scan was done (which can be triggered by clicking "Scan for Networks"), 
 
 - a list of networks is displayed at the top of the page; click "Show All" to list all networks including their channel;
 - a "proposed channel" is displayed near the "WiFi channel" drop-down, based on a rather simple heuristic. The banner is green when a channel is excellent, grey when it is impeded by overlapping channels, and when that banner is red operation in AP mode is not recommended due to channels all being used.
@@ -751,6 +757,10 @@ The firmware supports MQTT 3.1.1 and 5.0. There is no difference in features, so
 ##### &#9193; User[:Password]
 
 The username (and optionally the password) to be used when connecting to the broker. Can be left empty if the broker accepts anonymous logins.
+
+##### &#9193; Topic to display
+
+An optional MQTT topic the SID subscribes to in order to display messages on its display. Only eight characters are shown, and only a-Z/A-Z and 0-9.
 
 ## Appendix B: LED signals
 
