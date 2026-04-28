@@ -12,7 +12,7 @@ The hardware is available [here](https://circuitsetup.us/product/delorean-time-m
 
 Features include
 - various idle patterns
-- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) or via [MQTT](#home-assistant--mqtt)
+- [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) or via [Home Assistant](#home-assistant--mqtt)
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - [Spectrum Analyzer](#spectrum-analyzer) mode via built-in microphone
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local, hostname configurable)
@@ -74,7 +74,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 
 </details>
 
-If the SID fails to connect, it falls back to AP-mode. You can trigger another connection attempt by entering *77ok.
+If the SID fails to connect, it falls back to AP-mode. You can trigger another connection attempt by entering *77ok on the IR remote control.
 
 #### Places without a WiFi network
 
@@ -131,7 +131,7 @@ For ways to trigger a time travel, see [here](#time-travel).
 
 The main control device is the supplied IR remote control. If a TCD is connected through [BTTF-Network](#bttf-network-bttfn), the SID can also be controlled through the TCD's keypad.
 
-### IR remote control
+### IR Remote Control
 
 Your SID comes with an IR remote control included. This remote works out-of-the-box and needs no setup. 
 
@@ -148,7 +148,7 @@ Apart from the feedback LED, your SID will also show some feedback signals on it
 
 See [here](#appendix-b-led-signals) for all supported signals.
 
-### IR learning
+### IR Learning
 
 Your SID can learn the codes of another IR remote control. Most remotes with a carrier signal of 38kHz (which most IR remotes use) will work. However, some remote controls, especially ones for TVs, send keys repeatedly and/or send different codes alternately. If you had the SID learn a remote and the keys are not (always) recognized afterwards or appear to the pressed repeatedly while held, that remote is of that type and cannot be used.
 
@@ -166,7 +166,7 @@ If no key is pressed for 10 seconds, the learning process aborts (as does briefl
 
 To make the SID forget a learned IR remote control, type *654321ok.
 
-### Locking IR control
+### Locking IR Control
 
 You can have your SID ignore IR commands from any IR remote control (be it the supplied standard one, be it one you had your SID learn) by entering *71ok. After this sequence, the SID will ignore all IR commands until *71ok is entered again. The purpose of this function is to enable you to use the same remote for your SID and other props.
 
@@ -174,7 +174,7 @@ The status of the IR lock is saved 10 seconds after its last change, and is pers
 
 In order to only disable the supplied IR remote control, check the option **_Disable supplied IR remote control_** in the [Config Portal](#-disable-supplied-ir-remote-control). In that case, any learned remote will still work.
 
-### Remote control reference
+### Remote Control Reference
 
 <table>
     <tr>
@@ -267,6 +267,10 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="left">*61&#9166;</td><td>6061</td>
     </tr>
     <tr>
+     <td align="left">Enable/disable "mirrored" Spectrum Analyzer</td>
+     <td align="left">*64&#9166;</td><td>6064</td>
+    </tr>
+    <tr>
      <td align="left">Enable/disable positive IR feedback</td>
      <td align="left">*62&#9166;</td><td>6062</td>
     </tr>
@@ -299,6 +303,14 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="left">*400&#9166; - *415&#9166;</td><td>6400-6415</td>
     </tr>
     <tr>
+     <td align="left">Disable <a href='#car-setup'>car mode</a><sup>1</sup></td>
+     <td align="left">*990&#9166;</td><td>6990</td>
+    </tr>
+    <tr>
+     <td align="left">Enable <a href='#car-setup'>car mode</a><sup>1</sup></td>
+     <td align="left">*991&#9166;</td><td>6991</td>
+    </tr>
+    <tr>
      <td align="left">Reboot the device<sup>1</sup></td>
      <td align="left">*64738&#9166;</td><td>6064738</td>
     </tr>
@@ -324,7 +336,7 @@ In order to only disable the supplied IR remote control, check the option **_Dis
 
 [Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
 
-## Time travel
+## Time Travel
 
 To travel through time, type "0" on the remote control. The SID will play its time travel sequence.
 
@@ -335,6 +347,8 @@ Other ways of triggering a time travel are available if a [Time Circuits Display
 ## Spectrum Analyzer
 
 The spectrum analyzer (or rather: frequency-separated vu meter) works through a built-in microphone. This microphone is located behind the right-hand side center hole of the enclosure.
+
+There are two variations of the Spectrum Analyzer: Traditional and "mirrored". The **_Mirrored Spectrum Analyzer_** option in the Config Portal selects between those two, as does typing *64ok on the remote.
 
 Sticky peaks are optional, they can be switched on/off in the Config Portal and by typing *61ok on the remote.
 
@@ -350,11 +364,11 @@ Siddly is a simple game where puzzle pieces of various shapes fall down from the
 
 Snakes like apples (at least so I have heard). You control a snake that feels a profound urge to eat apples. After each eaten apple, the snake grows, and a new apple appears. Unfortunately, snakes don't like to hit their heads, so you need to watch out that the snake's head doesn't collide with its body.
 
-## SD card
+## SD Card
 
-Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend, Sandisk Industrial, Verbatim Premium and Samsung Pro Endurance SDHC cards work fine in my experience.
+>Preface note on SD cards: For unknown reasons, some SD cards simply do not work with this device. For instance, I had no luck with Sandisk Ultra 32GB and  "Intenso" cards. If your SD card is not recognized, check if it is formatted in FAT32 format (not exFAT!). Also, the size must not exceed 32GB (as larger cards cannot be formatted with FAT32). Transcend, Sandisk Industrial, Verbatim Premium and Samsung Pro Endurance SDHC cards work fine in my experience.
 
-The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), in order to avoid [Flash Wear](#flash-wear) on the SID's CPU. For instance, the chosen idle pattern (*1x), and the running state of the Spectrum Analyzer, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required.
+The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), to avoid [Flash Wear](#flash-wear) on the SID's CPU. For instance, the chosen idle pattern (*1x), and the running state of the Spectrum Analyzer, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required.
 
 Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
 
@@ -368,9 +382,13 @@ The TCD can communicate with the SID wirelessly, via the built-in "**B**asic-**T
 |:--:|
 | Click to watch the video |
 
-BTTFN requires the props all to be connected to the same network, such as, for example, your home WiFi network. BTTFN does not work over the Internet.
+BTTFN requires the props all to be connected to the same network, such as, for example, your home WiFi network, or the TCD acting as access point. BTTFN does not work over the Internet.
 
-![STAmode-bttfn](img/stamode-bttfn.png)
+![STAmode-home](img/stamode-home.png)
+
+<p>&nbsp;</p>
+
+![STAmode-car](img/stamode-car.png)
 
 <details>
 <summary>More...</summary>
@@ -379,14 +397,14 @@ BTTFN requires the props all to be connected to the same network, such as, for e
 
 </details>
 
-In order to connect your SID to the TCD using BTTFN, just enter the TCD's IP address or hostname in the **_IP address or hostname of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. 
+To connect your SID to the TCD, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname or IP address of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. 
 
 Afterwards, the SID and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
 - both play an alarm-sequence when the TCD's alarm occurs,
 - the SID can be remote controlled through the TCD's keypad (command codes 6xxx),
 - the SID can remote control the TCD's keypad (see [below](#remote-controlling-the-tcds-keypad))
-- the SID queries the TCD for speed (GPS, rotary encoder, Remote) if desired to adapt its idle pattern to speed,
+- the SID queries the TCD for speed (GPS, rotary encoder, Remote), if desired, to adapt its idle pattern to speed,
 - the SID queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing "0" on the IR remote control or the SID's Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
@@ -396,11 +414,13 @@ You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time
 
 The SID can, through its IR remote control, remote control the TCD keypad. The TCD will react to pressing a key on the IR remote as if that key was pressed on the TCD keypad.
 
-In order to start TCD keypad remote control, type *95ok on the SID's IR remote control (or issue command 6095 from the TCD or through [HA/MQTT](#control-the-sid-via-mqtt)).
+As a prerequisite, the TCD must be set to permit remote control. This is done on the TCD through keypad command 995.
+
+To start TCD keypad remote control, type *96ok on the SID's IR remote control (or issue command 6096 from the TCD or through [HA/MQTT](#control-the-sid-via-mqtt)).
 
 Keys 0-9 as well as OK (=ENTER) on your IR remote control will now be registered by the TCD as key presses.
 
-"Holding" a key on the TCD keypad is emulated by pressing \* followed by the key, for instance *1 (in order to toggle the TCD alarm). Only keys 0-9 can be "held".
+"Holding" a key on the TCD keypad is emulated by pressing \* followed by the key, for instance *1 (to toggle the TCD alarm). Holding "OK" is only accepted by the TCD to stop the alarm, but not for entering the keypad menu.
 
 Pressing \# quits TCD keypad remote control mode, as does issuing command 6097 on the TCD or through HA/MQTT.
 
@@ -490,33 +510,35 @@ If your broker does not allow anonymous logins, a username and password can be s
 
 Limitations: TLS/SSL not supported; ".local" domains (MDNS) not supported; server/broker must respond to PING (ICMP) echo requests. For proper operation with low latency, it is recommended that the broker is on your local network. MQTT is disabled when your SID is operated in AP-mode or when connected to the TCD run in AP-Mode (TCD-AP).
 
-## Car setup
+## Car Setup
 
-If your SID, along with a [Time Circuits Display](https://tcd.out-a-ti.me), is mounted in a car, the following network configuration is recommended:
+If your SID, along with a [Time Circuits Display](https://tcd.out-a-ti.me/), is mounted in a car or other places without a local WiFi network, the following network configuration is recommended:
 
 ![STAmode-car](img/stamode-car2.png)
 
+This configuration can easily achieved by putting both the TCD and the SID in *Car Mode*:
+
 #### TCD
 
-- Run your TCD in [*car mode*](https://tcd.out-a-ti.me/#car-mode);
-- disable WiFi power-saving on the TCD by setting **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the WiFi Configuration page.
+- Set **_Power save timer_** to 0 (zero) in the "AP-mode settings" section on the *WiFi Configuration* page
+- Put your TCD in [*Car Mode*](https://tcd.out-a-ti.me/#car-mode) by issuing keypad command 991.
 
 #### SID
 
-Enter the Config Portal on the SID, click on *Settings* and
-  - enter *192.168.4.1* into the field **_IP address or hostname of TCD_**
-  - click on *Save*.
+One-time configuration steps:
+- Enter the Config Portal on the SID, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do not use an IP address.
+- Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
-After the SID has restarted, re-enter the SID's Config Portal (while the TCD is powered and in *car mode*) and
-  - click on *WiFi Configuration*,
-  - select the TCD's access point name in the list at the top ("TCD-AP"; if there is no list, click on "Scan for Networks") or enter *TCD-AP* into the *Network name (SSID)* field; if you password-protected your TCD's AP, enter this password in the *password* field. Leave all other fields empty,
-  - click on *Save*.
+If everything is in place, you can enable Car mode on the SID by typing *991ok on the remote. The SID will reboot and attempt to connect to the TCD's AP.
 
-In order to access the SID's Config Portal in your car, connect your handheld or computer to the TCD's WiFi access point ("TCD-AP"), and direct your browser to http://sid.local ; if that does not work, go to the TCD's keypad menu, press ENTER until "BTTFN CLIENTS" is shown, hold ENTER, and look for the SID's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display).
+You can switch between your "normal" (home, iPhone, ..) WiFi connection and Car mode by entering *990ok or *991ok, respectively.
 
-This "car setup" can also be used in a home setup with no local WiFi network present.
+To access the SID's Config Portal in Car mode, connect your handheld or computer to the TCD's WiFi network ("TCD-AP"), and direct your browser to http://sid.local.
 
-## WiFi power saving features
+  ><details><summary>If that fails...</summary>
+  >If connecting to http://sid.local fails due to a name resolution error, go to the TCD's keypad menu, navigate to "BTTFN CLIENTS", and look for the SID's IP address there; then direct your browser to that IP by using the URL http://a.b.c.d (a-d being the IP address displayed on the TCD display)</details>
+
+## WiFi Power Saving Features
 
 The Config Portal offers an option for WiFi power saving for AP-mode (ie when the device acts as an access point). This option configures a timer after whose expiration WiFi is switched off; the device is no longer transmitting or receiving data over WiFi.
 
@@ -565,7 +587,7 @@ This leads to the [HomeAssistant/MQTT Settings page](#hamqtt-settings).
 
 This leads to the firmware update page.
 
-In order to upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the file selector and click *Update*.
+To upload a new firmware, such as published in the [Release packages](https://github.com/realA10001986/SID/releases), select the "**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**" file as contained in the Release package in the file selector and click *Update*.
 
 See also [here](#firmware-installation--firmware-update).
 
@@ -577,15 +599,25 @@ Through this page you can either connect your SID to your local WiFi network, or
 
 #### <ins>Connecting to an existing WiFi network</ins>
 
-In order to connect your SID to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __password__ (WPAx). If there is no list displayed, click on "Scan for Networks".
+To connect your SID to your WiFi network, all you need to do is either to click on one of the networks listed at the top or to enter a __Network name (SSID)__, and optionally a __password__ (WPAx). If there is no list displayed, click on "Scan for Networks".
 
->By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. If you connect your SID to your Time Circuits Display acting as access point ("TCD-AP"), leave these all empty.
+>By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. 
 
 If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it, or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
 Checking this box (and clicking SAVE) deletes the currently saved WiFi network (SSID and password as well as static IP data) and reboots the device; it will restart in "access point" (AP) mode. See [here](#connecting-to-a-wifi-network).
+
+##### &#9193; Car mode settings
+
+In Car mode, the device connects to the TCD-AP as configured here instead of the WiFi network configured above. 
+
+Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TCD-AP_** and the TCD's AP password (if configured on the TCD) in **_Password for TCD-AP_**. 
+
+>In the unlikely case that multiple TCD's are in range, you can single out your TCD by its BSSID. The TCD displays its BSSID on its *WiFi Configuration* page (starting version 3.23).
+
+If you want to enter Car mode immediately, check **_Enable car mode_**. You can also later enable Car mode by typing *991ok on the remote. *990ok disables Car mode.
 
 ##### &#9193; Hostname
 
@@ -648,6 +680,10 @@ When set, the time travel sequence will not be animated (no flicker, no "moving 
 
 This selects the boot-up setting for showing or not showing the peaks in the Spectrum Analyzer. Can be changed anytime by typing *61ok on the IR remote control.
 
+##### &#9193; Mirrored Spectrum Analyzer
+
+This enables an alternative flavor of the Spectrum Analyzer: The bars are mirrored around a center axis. This flavor can also be toggled by typing *64ok on the IR remote control.
+
 ##### &#9193; Show positive IR feedback on display
 
 If this option is checked, your SID will show a signal on its display upon a successful command sequence. 
@@ -671,15 +707,13 @@ The Screen Saver, when active, disables all LEDs, until
 
 #### <ins>Settings for BTTFN communication</ins>
 
-##### &#9193; IP address or hostname of TCD
+##### &#9193; Hostname or IP address of TCD
 
-If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here.
-
-If you connect your SID to the TCD's access point ("TCD-AP"), the TCD's IP address is 192.168.4.1.
+If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here. Hostname is preferred because it makes the setup independent of the network environment.
 
 ##### &#9193; Adapt pattern to TCD-provided speed
 
-If this option is checked and your TCD is equipped with a GPS receiver or a rotary encoder, the SID will adapt its display pattern to current GPS speed or the reading of the encoder, respectively.
+If this option is checked and your TCD is equipped with a GPS sensor or a rotary encoder, or a [Futaba Remote](https://remote.out-a-ti.me) is present, the SID will adapt its display pattern to current speed as transmitted by the TCD.
 
 ##### &#9193; Follow TCD night-mode
 
