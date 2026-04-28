@@ -416,7 +416,7 @@ The SID can, through its IR remote control, remote control the TCD keypad. The T
 
 As a prerequisite, the TCD must be set to permit remote control. This is done on the TCD through keypad command 995.
 
-To start TCD keypad remote control, type *96ok on the SID's IR remote control (or issue command 6096 from the TCD or through [HA/MQTT](#control-the-sid-via-mqtt)).
+To start TCD keypad remote control, type *96ok on the SID's IR remote control or issue keypad command 6096 on the TCD.
 
 Keys 0-9 as well as OK (=ENTER) on your IR remote control will now be registered by the TCD as key presses.
 
