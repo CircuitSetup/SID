@@ -2,7 +2,7 @@
 
 This [repository](https://sid.out-a-ti.me) holds the most current firmware for CircuitSetup's magnificent [SID](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/) kit. The SID, also known as "Field Containment System Display", is an important part of Doc Brown's Delorean Time Machine.
 
-The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone, or in connection with CircuitSetup's [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/). It's made of metal and perfectly fit for mounting in an actual Delorean. A testament to its build quality and accuracy is the fact that it is used in the **movie-based, official musicals on tour** (2024-2026).
+The hardware is available [here](https://circuitsetup.us/product/delorean-time-machine-status-indicator-display-sid/). The SID replica can be used stand-alone or in connection with CircuitSetup's [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/). It's made of metal and perfectly fit for mounting in an actual Delorean. A testament to its build quality and accuracy is the fact that it is used in the **movie-based, official musicals on tour** (2024-2026).
 
 ![mysid](img/mysid.jpg)
 
@@ -16,7 +16,7 @@ Features include
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - [Spectrum Analyzer](#spectrum-analyzer) mode via built-in microphone
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local)
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad, or [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad and [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
@@ -38,9 +38,9 @@ The first step is to establish access to the SID's configuration web site ("Conf
 
 ### Connecting to a WiFi network
 
-Your SID knows two ways of WiFi operation: Either it creates its own WiFi network, or it connects to a pre-existing WiFi network.
+Your SID knows two ways of WiFi operation: Either it creates its own WiFi network or it connects to a pre-existing WiFi network.
 
-As long as your SID is unconfigured, it creates its own WiFi network named "SID-AP". This mode of operation is called "**Access point mode**", or **"AP-mode"**. In this mode, computers/handhelds can connect to your SID in order to access the Config Portal, but ways of communication end right here. There is no inter-prop-communication ([BTTFN](#bttf-network-bttfn)) and no [HA/MQTT](#home-assistant--mqtt).
+As long as your SID is unconfigured, it creates its own WiFi network named "SID-AP". This mode of operation is called "**Access point mode**" or **"AP-mode"**. In this mode, computers/handhelds can connect to your SID in order to access the Config Portal, but ways of communication end right here. There is no inter-prop-communication ([BTTFN](#bttf-network-bttfn)) and no [HA/MQTT](#home-assistant--mqtt).
 
 ![APmode](img/apmode.png)
 
@@ -68,7 +68,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
 <details>
 <summary>More...</summary>
   
->If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it, or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+>If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 >Your SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until it has completed its startup sequence, then type \*123456ok on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
 
@@ -123,7 +123,7 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
 ## Basic Operation
 
-When the SID is idle, it shows an idle pattern. There are alternative idle patterns to choose from, selected by *10ok through *14ok on the remote, or via MQTT. If an SD card is present, the chosen setting will be persistent across reboots.
+When the SID is idle, it shows an idle pattern. There are alternative idle patterns to choose from, selected by *10ok through *14ok on the remote. If an SD card is present, the chosen setting will be persistent across reboots.
 
 If the option **_Adhere strictly to movie patterns_** is set (which is the default), the idle patterns #0 through #3 will only use patterns extracted from the movies (plus some interpolations); the same goes for when [TCD-provided speed](#bttf-network-bttfn) is used. If this option is unset, random variations are shown, which is less boring, but also less accurate.
 
@@ -542,7 +542,7 @@ To access the SID's Config Portal in Car mode, connect your handheld or computer
 
 The Config Portal offers an option for WiFi power saving for AP-mode (ie when the device acts as an access point). This option configures a timer after whose expiration WiFi is switched off; the device is no longer transmitting or receiving data over WiFi.
 
-The timer can be set to 0 (which disables it; WiFi is never switched off; this is the default), or 10-99 minutes. 
+The timer can be set to 0 (which disables it; WiFi is never switched off; this is the default) or 10-99 minutes. 
 
 After WiFi has been switched off due to timer expiration, it can be re-enabled by entering *77ok, in which case the timers are restarted (ie WiFi is again switched off after timer expiration).
 
@@ -595,7 +595,7 @@ See also [here](#firmware-installation--firmware-update).
 
 ### WiFi Configuration
 
-Through this page you can either connect your SID to your local WiFi network, or configure AP mode. 
+Through this page you can either connect your SID to your local WiFi network or configure AP mode. 
 
 #### <ins>Connecting to an existing WiFi network</ins>
 
@@ -603,7 +603,7 @@ To connect your SID to your WiFi network, all you need to do is either to click 
 
 >By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. 
 
-If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it, or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+If there are several APs with identical SSID in your area, you can select a specific AP to use by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
@@ -645,7 +645,7 @@ If you forget this password and are thereby locked out of your SID, enter *12345
 
 ##### &#9193; WiFi channel
 
-Here you can select one out of 11 channels, or have the SID choose a random channel for you. The default channel is 1. Preferred are channels 1, 6 and 11.
+Here you can select one out of 11 channels or have the SID choose a random channel for you. The default channel is 1. Preferred are channels 1, 6 and 11.
 
 WiFI channel selection is key for a trouble-free operation. Disturbed WiFi communication can lead to disrupted sequences, packet loss, hanging or freezing props, and other problems. A good article on WiFi channel selection is [here](https://community.ui.com/questions/Choosing-the-right-Wifi-Channel-on-2-4Ghz-Why-Conventional-Wisdom-is-Wrong/ea2ffae0-8028-45fb-8fbf-60569c6d026d).
 
