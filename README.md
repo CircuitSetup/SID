@@ -370,7 +370,7 @@ Snakes like apples (at least so I have heard). You control a snake that feels a 
 
 The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), to avoid [Flash Wear](#flash-wear) on the SID's CPU. For instance, the chosen idle pattern (*1x), and the running state of the Spectrum Analyzer, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required.
 
-Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
+The SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
 
 ## Connecting a Time Circuits Display
 
@@ -426,7 +426,7 @@ Pressing \# quits TCD keypad remote control mode, as does issuing command 6097 o
 
 ### Connecting a TCD by wire
 
->Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
+>A wired connection only allows for synchronized time travel sequences, no other communication takes place. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
 For a connection by wire, connect GND and GPIO on the SID's "Time Travel" connector to the TCD like in the table below:
 
@@ -666,7 +666,7 @@ See [here](#wifi-power-saving-features).
 
 If this option is checked, in idle modes 0-3 as well as when using TCD-provided speed, only patterns which were extracted from the movies (plus some interpolations) are shown. If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing *60ok on the IR remote control.
 
-Note that this option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
+This option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
 
 ##### &#9193; Skip time tunnel animation
 
