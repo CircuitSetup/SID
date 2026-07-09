@@ -334,7 +334,7 @@ In order to only disable the supplied IR remote control, check the option **_Dis
 
 1: Not supported through HA/MQTT [_INJECT_](#the-inject_x-command) command
 
-[Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use. (Note that MacOS' preview application has a bug that scrambles the links in the document. Acrobat Reader does it correctly.)
+[Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use.
 
 ## Time Travel
 
@@ -370,7 +370,7 @@ Snakes like apples (at least so I have heard). You control a snake that feels a 
 
 The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), to avoid [Flash Wear](#flash-wear) on the SID's CPU. For instance, the chosen idle pattern (*1x), and the running state of the Spectrum Analyzer, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required.
 
-Note that the SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
+The SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
 
 ## Connecting a Time Circuits Display
 
@@ -408,8 +408,6 @@ Afterwards, the SID and the TCD can communicate wirelessly and
 - the SID queries the TCD for fake power and night mode, in order to react accordingly if so configured,
 - pressing "0" on the IR remote control or the SID's Time Travel button can trigger a synchronized Time Travel on all BTTFN-connected devices, just like if that Time Travel was triggered through the TCD.
 
-You can use BTTF-Network and MQTT at the [same time](#receive-commands-from-time-circuits-display).
-
 #### Remote controlling the TCD's keypad
 
 The SID can, through its IR remote control, remote control the TCD keypad. The TCD will react to pressing a key on the IR remote as if that key was pressed on the TCD keypad.
@@ -428,7 +426,7 @@ Pressing \# quits TCD keypad remote control mode, as does issuing command 6097 o
 
 ### Connecting a TCD by wire
 
->Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
+>A wired connection only allows for synchronized time travel sequences, no other communication takes place. A wireless connection over BTTFN/WiFi is much more powerful and therefore recommended over a wired connection.
 
 For a connection by wire, connect GND and GPIO on the SID's "Time Travel" connector to the TCD like in the table below:
 
@@ -463,7 +461,11 @@ Next, head to the Config Portal and set the option **_TCD connected by wire_**. 
 
 ## Home Assistant / MQTT
 
-The SID supports MQTT protocol versions 3.1.1 and 5.0 for the following features:
+By means of MQTT, your SID can
+- display messages on a configured topic on its display, and
+- be remote controlled through commands sent to **bttf/sid/cmd**.
+
+The SID supports MQTT protocol versions 3.1.1 and 5.0.
 
 ### Control the SID via MQTT
 
@@ -483,12 +485,6 @@ To set idle pattern #4 (6014), issue the following command: **INJECT_6014**
 To start the Spectrum Analyzer (6021), issue **INJECT_6021**
 
 To set the brightness level to 15 (6415), issue **INJECT_6415**
-
-### Receive commands from Time Circuits Display
-
-If both TCD and SID are connected to the same broker, and the option **_Publish time travel and alarm events_** is checked on the TCD's side, the SID will receive information on time travel and alarm and play their sequences in sync with the TCD. Unlike BTTFN, however, no other communication takes place.
-
-MQTT and BTTFN can co-exist. However, the TCD only sends out time travel and alarm notifications through either MQTT or BTTFN, never both. If you have other MQTT-aware devices listening to the TCD's public topic (bttf/tcd/pub) in order to react to time travel or alarm messages, use MQTT (ie check **_Publish time travel and alarm events_**). If only BTTFN-aware devices are to be used, uncheck this option to use BTTFN as it has less latency.
 
 ### Display messages
 
@@ -670,7 +666,7 @@ See [here](#wifi-power-saving-features).
 
 If this option is checked, in idle modes 0-3 as well as when using TCD-provided speed, only patterns which were extracted from the movies (plus some interpolations) are shown. If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing *60ok on the IR remote control.
 
-Note that this option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
+This option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
 
 ##### &#9193; Skip time tunnel animation
 
@@ -782,7 +778,7 @@ If checked, the SID will connect to the broker (if configured) and send and rece
 
 ##### &#9193; Broker IP[:port] or domain[:port]
 
-The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If a different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. Note that ".local" (MDNS) domains are not supported.
+The broker server address. Can be a domain (eg. "myhome.me") or an IP address (eg "192.168.1.5"). The default port is 1883. If a different port is to be used, it can be specified after the domain/IP and a colon ":", for example: "192.168.1.5:1884". Specifying the IP address is preferred over a domain since the DNS call adds to the network overhead. ".local" (MDNS) domains are not supported.
 
 ##### &#9193; Protocol version
 
@@ -830,4 +826,4 @@ Signals are shown in the top two rows of the display.
 
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ [Source](https://sid.out-a%2dti.me)  
-_Other props: [Time Circuits Display](https://tcd.out-a%2dti.me) ... [Flux Capacitor](https://fc.out-a%2dti.me) ... [Dash Gauges](https://dg.out-a%2dti.me) ... [VSR](https://vsr.out-a%2dti.me) ... [Remote Control](https://remote.out-a%2dti.me) ... [TFC](https://tfc.out-a%2dti.me)_
+_Other props: [Time Circuits Display](https://tcd.out-a%2dti.me) ... [Flux Capacitor](https://fc.out-a%2dti.me) ... [Dash Gauges](https://dg.out-a%2dti.me) ... [VSR](https://vsr.out-a%2dti.me) ... [Remote Control](https://remote.out-a%2dti.me) ... [TFC](https://tfc.out-a%2dti.me) ... [Jukebox](https://jb.out-a%2dti.me)_
