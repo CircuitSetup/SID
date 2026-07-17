@@ -433,12 +433,13 @@ static bool          remHoldKey = false;
 #define BTTFN_SSRC_P0           4
 #define BTTFN_SSRC_P1           5
 #define BTTFN_SSRC_P2           6
-#define BTTFN_TCDI1_NOREM   0x0001
-#define BTTFN_TCDI1_NOREMKP 0x0002
-#define BTTFN_TCDI1_EXT     0x0004
-#define BTTFN_TCDI1_OFF     0x0008
-#define BTTFN_TCDI1_NM      0x0010
-#define BTTFN_TCDI2_BUSY    0x0001
+#define BTTFN_TCDI1_NOREM     0x0001
+#define BTTFN_TCDI1_NOREMKP   0x0002
+#define BTTFN_TCDI1_EXT       0x0004
+#define BTTFN_TCDI1_OFF       0x0008
+#define BTTFN_TCDI1_NM        0x0010
+#define BTTFN_TCDI2_BUSY      0x0001
+#define BTTFN_TCDI2_TIMEINFO  0x8000
 static const uint8_t BTTFUDPHD[4] = { 'B', 'T', 'T', 'F' };
 static bool          useBTTFN = false;
 static WiFiUDP       bttfUDP;
@@ -3345,6 +3346,11 @@ static void handle_tcd_notification(uint8_t *buf)
             remoteAllowed = !(tcdi1 & BTTFN_TCDI1_NOREMKP);
             tcdIsBusy = !!(tcdi2 & BTTFN_TCDI2_BUSY);
             if(!remoteAllowed || tcdIsBusy) remMode = remHoldKey = false;
+
+            if(tcdi2 & BTTFN_TCDI2_TIMEINFO) {
+                memcpy(bttfnDateBuf, &buf[16], sizeof(bttfnDateBuf));
+                bttfnDateNow = millis();
+            }
         }
         break;
     }

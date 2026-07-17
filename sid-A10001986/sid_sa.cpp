@@ -124,7 +124,7 @@ int         ampFact = 100;
 
 #if defined(SID_DBG) && defined(SA_DBG_WRITEOUT)
 #include "sid_settings.h"
-#include <SD.h>
+#include "src/SD/SD.h"
 #include <FS.h>
 static File outFile;
 static bool outFileOpen = false;
