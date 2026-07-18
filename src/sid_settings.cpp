@@ -62,7 +62,7 @@
 #define ARDUINOJSON_ENABLE_STD_STRING 0
 #define ARDUINOJSON_ENABLE_NAN 0
 #include <ArduinoJson.h>  // https://github.com/bblanchon/ArduinoJson
-#include <SD.h>
+#include "src/SD/SD.h"
 #include <SPI.h>
 #include <FS.h>
 #define MYNVS LittleFS
@@ -73,17 +73,9 @@
 #include "sid_main.h"
 #include "sid_wifi.h"
 
-// If defined, old settings files will be used
-// and converted if no new settings file is found.
-// Keep this defined for a few versions/months.
-//#define SETTINGS_TRANSITION
-// Stage 2: Assume new settings are present, but
-// still delete obsolete files.
+// Settings transition, stage 2: Assume new settings
+// are present, but still delete obsolete files.
 #define SETTINGS_TRANSITION_2
-
-#ifdef SETTINGS_TRANSITION
-#undef SETTINGS_TRANSITION_2
-#endif
 
 // Size of main config JSON
 // Needs to be adapted when config grows
@@ -138,13 +130,6 @@ static const char *irCfgName  = "/sidirkeys.json";  // IR keys (system-created) 
 static const char *secCfgName = "/sid2cfg";         // Secondary settings (flash/SD)
 static const char *terCfgName = "/sid3cfg";         // Tertiary settings (SD)
 
-#ifdef SETTINGS_TRANSITION
-static const char *ipCfgNameO = "/sidipcfg.json";   // IP config (flash)
-static const char *idNameO    = "/sidid.json";      // SID remote ID (flash)
-static const char *briCfgName = "/sidbricfg.json";  // Brightness config (flash/SD)
-static const char *irlCfgName = "/sidirlcfg.json";  // IR lock (flash/SD)
-static const char *ipaCfgName = "/sidipat.json";    // Idle pattern (SD only)
-#endif
 #ifdef SETTINGS_TRANSITION_2
 static const char *obsFiles[] = {
     "/sidipcfg.json",  "/sidid.json",  "/sidbricfg.json", 
@@ -217,9 +202,6 @@ static bool saveConfigFile(const char *fn, uint8_t *buf, int len, int forcefs = 
 static uint32_t calcHash(uint8_t *buf, int len);
 static bool saveSecSettings(bool useCache);
 static bool saveTerSettings(bool useCache);
-#ifdef SETTINGS_TRANSITION
-static void removeOldFiles(const char *oldfn);
-#endif
 
 static void firmware_update();
 
@@ -238,7 +220,6 @@ void settings_setup()
     #endif
     bool writedefault = false;
     bool freshFS = false;
-    bool SDres = false;
     int cfgReadCount = 0;
 
     #ifdef SID_DBG
@@ -295,32 +276,20 @@ void settings_setup()
     }
 
     // Set up SD card
+    pinMode(SD_CS_PIN, OUTPUT);
+    digitalWrite(SD_CS_PIN, HIGH);
     SPI.begin(SPI_SCK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN);
-
-    haveSD = false;
-
-    uint32_t sdfreq = (settings.sdFreq[0] == '0') ? 16000000 : 4000000;
-    #ifdef SID_DBG
-    Serial.printf("%s: SD/SPI frequency %dMHz\n", funcName, sdfreq / 1000000);
-    #endif
+    delay(20);
 
     #ifdef SID_DBG
     Serial.printf("%s: Mounting SD... ", funcName);
     #endif
 
-    if(!(SDres = SD.begin(SD_CS_PIN, SPI, sdfreq))) {
-        #ifdef SID_DBG
-        Serial.printf("Retrying at 25Mhz... ");
-        #endif
-        SDres = SD.begin(SD_CS_PIN, SPI, 25000000);
+    if(!(haveSD = SD.begin(SD_CS_PIN, SPI, 16000000))) {
+        delay(20);
+        haveSD = SD.begin(SD_CS_PIN, SPI, 25000000);
     }
-
-    if(SDres) {
-
-        #ifdef SID_DBG
-        Serial.println("ok");
-        #endif
-
+    if(haveSD) {
         uint8_t cardType = SD.cardType();
        
         #ifdef SID_DBG
@@ -329,7 +298,6 @@ void settings_setup()
         #endif
 
         haveSD = ((cardType != CARD_NONE) && (cardType != CARD_UNKNOWN));
-
     }
 
     if(haveSD) {
@@ -845,23 +813,6 @@ void loadBrightness()
         Serial.println("loadBrightness: extracting from secSettings");
         #endif
         sid.setBrightness(secSettings.brightness);
-    } else {
-        #ifdef SETTINGS_TRANSITION
-        char temp[6];
-        File configFile;
-        if(!haveFS && !configOnSD) return;
-        if(openCfgFileRead(briCfgName, configFile)) {
-            DECLARE_S_JSON(512,json);
-            if(!readJSONCfgFile(json, configFile)) {
-                if(!CopyCheckValidNumParm(json["brightness"], temp, sizeof(temp), 0, 15, 15)) {
-                    sid.setBrightness((uint8_t)atoi(temp), true);
-                }
-            } 
-            configFile.close();
-            saveBrightness();
-        }
-        removeOldFiles(briCfgName);
-        #endif
     }
 }
 
@@ -888,23 +839,6 @@ void loadIRLock()
         Serial.println("loadIRLock: extracting from secSettings");
         #endif
         irLocked = !!secSettings.irLocked;
-    } else {
-        #ifdef SETTINGS_TRANSITION
-        char temp[6];
-        File configFile;
-        if(!haveFS && !configOnSD) return;
-        if(openCfgFileRead(irlCfgName, configFile)) {
-            DECLARE_S_JSON(512,json);
-            if(!readJSONCfgFile(json, configFile)) {
-                if(!CopyCheckValidNumParm(json["lock"], temp, sizeof(temp), 0, 1, 0)) {
-                    irLocked = (atoi(temp) > 0);
-                }
-            } 
-            configFile.close();
-            saveIRLock();
-        }
-        removeOldFiles(irlCfgName);
-        #endif
     }
 }
 
@@ -1087,27 +1021,6 @@ void loadIdlePat()
         if(terSettings.idleMode <= SID_MAX_IDLE_MODE) {
             idleMode = terSettings.idleMode;
         }
-    } else {
-        #ifdef SETTINGS_TRANSITION
-        char temp[6];
-        File configFile;
-        if(!haveSD) return;
-        if(openCfgFileRead(ipaCfgName, configFile, true)) {
-            DECLARE_S_JSON(512,json);
-            if(!readJSONCfgFile(json, configFile)) {
-                if(!CopyCheckValidNumParm(json["pattern"], temp, sizeof(temp), 0, 0x1f, 0)) {
-                    idleMode = (uint16_t)atoi(temp);
-                    strictMode = (idleMode & 0x10) ? true : false;
-                    idleMode &= 0x0f;
-                    if(idleMode > SID_MAX_IDLE_MODE) idleMode = 0;
-                }
-            } 
-            configFile.close();
-            saveIdlePat();
-            saveStrict();
-        }
-        removeOldFiles(ipaCfgName);
-        #endif
     }
 }
 
@@ -1151,20 +1064,6 @@ void saveBootMode()
  * Load/save/delete settings for static IP configuration
  */
 
-#ifdef SETTINGS_TRANSITION
-static bool CopyIPParm(const char *json, char *text, uint8_t psize)
-{
-    if(!json) return true;
-
-    if(strlen(json) == 0) 
-        return true;
-
-    memset(text, 0, psize);
-    strncpy(text, json, psize-1);
-    return false;
-}
-#endif
-
 bool loadIpSettings()
 {
     memset((void *)&ipsettings, 0, sizeof(ipsettings));
@@ -1186,36 +1085,6 @@ bool loadIpSettings()
                 deleteIpSettings();
             }
         }
-    } else {
-        #ifdef SETTINGS_TRANSITION
-        bool invalid = false;
-        bool haveConfig = false;
-        if( (!FlashROMode && MYNVS.exists(ipCfgNameO)) ||
-            (FlashROMode && SD.exists(ipCfgNameO)) ) {
-            File configFile = FlashROMode ? SD.open(ipCfgNameO, "r") : MYNVS.open(ipCfgNameO, "r");
-            if(configFile) {
-                DECLARE_S_JSON(512,json);
-                DeserializationError error = readJSONCfgFile(json, configFile);
-                if(!error) {
-                    invalid |= CopyIPParm(json["IpAddress"], ipsettings.ip, sizeof(ipsettings.ip));
-                    invalid |= CopyIPParm(json["Gateway"], ipsettings.gateway, sizeof(ipsettings.gateway));
-                    invalid |= CopyIPParm(json["Netmask"], ipsettings.netmask, sizeof(ipsettings.netmask));
-                    invalid |= CopyIPParm(json["DNS"], ipsettings.dns, sizeof(ipsettings.dns));
-                    haveConfig = !invalid;
-                } else {
-                    invalid = true;
-                }
-                configFile.close();
-            }
-            removeOldFiles(ipCfgNameO);
-        }
-        if(invalid) {
-            memset((void *)&ipsettings, 0, sizeof(ipsettings));
-        } else {
-            writeIpSettings();
-        }
-        return haveConfig;
-        #endif
     }
 
     ipHash = 0;
@@ -1275,29 +1144,6 @@ static bool loadId()
         #endif
         myRemID = buf;
         return true;
-    } else {
-        #ifdef SETTINGS_TRANSITION
-        bool invalid = false;
-        bool haveConfig = false;
-        if(!haveFS && !FlashROMode) return false;
-        if( (!FlashROMode && MYNVS.exists(idNameO)) ||
-             (FlashROMode && SD.exists(idNameO)) ) {
-            File configFile = FlashROMode ? SD.open(idNameO, "r") : MYNVS.open(idNameO, "r");
-            if(configFile) {
-                DECLARE_S_JSON(512, json);
-                DeserializationError error = readJSONCfgFile(json, configFile);
-                if(!error) {
-                    myRemID = (uint32_t)json["ID"];
-                    invalid = (myRemID == 0);
-                    if(!invalid) saveId();
-                    haveConfig = !invalid;
-                }
-                configFile.close();
-            }
-            removeOldFiles(idNameO);
-        }
-        return haveConfig;
-        #endif
     }
 
     return false;
@@ -1684,17 +1530,6 @@ static bool saveTerSettings(bool useCache)
     
     return saveConfigFile(terCfgName, (uint8_t *)&terSettings, sizeof(terSettings), 1);
 }
-
-#ifdef SETTINGS_TRANSITION
-static void removeOldFiles(const char *oldfn)
-{
-    if(haveSD) SD.remove(oldfn);
-    if(haveFS) MYNVS.remove(oldfn);
-    #ifdef SID_DBG
-    Serial.printf("removeOldFiles: Removing %s\n", oldfn);
-    #endif
-}
-#endif
 
 // Emergency firmware update from SD card
 static void fw_error_blink(int n)
