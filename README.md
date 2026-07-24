@@ -16,7 +16,7 @@ Features include
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - [Spectrum Analyzer](#spectrum-analyzer) mode via built-in microphone
 - advanced network-accessible [Config Portal](#the-config-portal) for setup (http://sid.local)
-- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, GPS-speed adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad and [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
+- [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, speed-adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad and [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
@@ -162,7 +162,7 @@ When IR learning is started, the display first shows "GO", immediately followed 
 
 If your remote control lacks the \* (starts command sequence) and \# (aborts command sequence) keys, you can use any other key, of course. \* could be eg. "menu" or "setup", \# could be "exit" or "return".
 
-If no key is pressed for 10 seconds, the learning process aborts (as does briefly pressing the Time Travel button): The keys already learned are forgotten and nothing is saved.
+If no key is pressed for 20 seconds, the learning process aborts (as does briefly pressing the Time Travel button): The keys already learned are forgotten and nothing is saved.
 
 To make the SID forget a learned IR remote control, type *654321ok.
 
