@@ -11,7 +11,7 @@ The hardware is available [here](https://circuitsetup.us/product/delorean-time-m
 | Click to watch the video |
 
 Features include
-- various idle patterns
+- movie accurate idle patterns
 - [Time Travel](#time-travel) function, triggered by button, [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/) or via [Home Assistant](#home-assistant--mqtt)
 - [IR remote controlled](#ir-remote-control); can learn keys from third-party remote
 - [Spectrum Analyzer](#spectrum-analyzer) mode via built-in microphone
@@ -21,7 +21,7 @@ Features include
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
 - [SD card](#sd-card) support
 - built-in OTA installer for firmware updates
-- &#128007; &#129370;
+- &#128007; &#129370; &#129370; &#127381;
 
 >This [repository](https://sid.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://sid.out-a-ti.me) might be ahead in development.
 
@@ -124,9 +124,9 @@ A full reference of the Config Portal is [here](#appendix-a-the-config-portal).
 
 ## Basic Operation
 
-When the SID is idle, it shows an idle pattern. There are various idle patterns to choose from, selected by entering ```*10ok``` through ```*14ok``` on the IR remote. If an SD card is present, the chosen setting will be persistent across reboots.
+When the SID is idle, it shows an _idle pattern_. There are various idle patterns to choose from, selected by entering ```*10ok``` through ```*14ok``` on the IR remote. Idle patterns #0 through #3 differ in update interval and/or maximum peak. If an SD card is present, the chosen setting will be persistent across reboots.
 
-If the option **_Adhere strictly to movie patterns_** is set (which is the default), idle patterns #0 through #3 will only show patterns extracted from the movies (plus some interpolations); this also applies when the pattern follows [TCD-provided speed](#bttf-network-bttfn). If this option is unset, random variations are shown, which is less boring, but also less accurate.
+If the option **_Adhere strictly to movie patterns_** is set (which is the default), idle patterns #0 through #3 (```*10ok``` - ```*13ok```) will only consist of patterns extracted from the movies (plus some interpolations); this also applies when the pattern follows [TCD-provided speed](#-adapt-patterns-0-3-to-tcd-provided-speed). If this option is unset, random variations are shown, which is less boring, but also less accurate.
 
 For ways to trigger a time travel, see [here](#time-travel).
 
@@ -153,11 +153,16 @@ See [here](#appendix-b-led-signals) for all supported signals.
 
 Your SID can learn the codes of another IR remote control. Most remotes with a carrier signal of 38kHz (which most IR remotes use) will work. However, some remote controls, especially ones for TVs, send keys repeatedly and/or send different codes alternately. If you had the SID learn a remote and the keys are not (always) recognized afterwards or appear to be pressed repeatedly while held, that remote is of that type and cannot be used.
 
+> [!TIP]
+> Usually, home entertainment IR remote controls send repeated codes when pressing the volume keys, and alternate codes for some number keys (in most cases 1 and 2) for using them for entering 2-digit channel numbers. If you have trouble finding a remote that works, a solution can be to use a programmable IR remote with a suitable layout, to program it with working codes from an existing IR remote (which keys those codes come from is unimportant, you can freely map them to keys on your programmable IR remote), and then have the SID learn the keys from said programmable IR remote. 
+
 IR learning can be initiated by entering ```*987654ok``` on the standard IR remote.
 
 >Alternatively, IR learning can be started by pressing and holding a connected [Time Travel](#time-travel) button for a few seconds (while the option **_TCD connected by wire_** in the Config Portal is unchecked).
 
-When IR learning is started, the display first shows "GO", immediately followed by "0". Press ```0``` on your remote, which the SID will visually acknowledge by displaying the next key to press. Then press ```1```, wait for the acknowledgement, and so on. Enter your keys in the following order:
+When IR learning is started, the SID stops what is currently doing and the display guides you through the learning process by showing the key to press next. Each key is prompted twice to sort out unsuitable remote controls. The process starts by showing "0" (and the left half of the red LED row). At this point, press ```0``` on your IR remote control. Next, the SID will show "0" again, this time with the right half of the red LED row. Now press ```0``` again. If the received IR codes match, the SID will proceed to the next key. If a key fails verification, ie if the codes sent on first and second key press don't match, the SID will abort and show "ERROR".
+
+The keys are prompted in the following order:
 
 ```0``` - ```1``` - ```2``` - ```3``` - ```4``` - ```5``` - ```6``` - ```7``` - ```8``` - ```9``` - ```*``` - ```#``` - ```Arrow up``` - ```Arrow down``` - ```Arrow left``` - ```Arrow right``` - ```OK``` 
 
@@ -665,9 +670,9 @@ See [here](#wifi-power-saving-features).
 
 ##### &#9193; Adhere strictly to movie patterns
 
-If this option is checked, in idle modes 0-3 as well as when using TCD-provided speed, only patterns which were extracted from the movies (plus some interpolations) are shown. If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing ```*60ok``` on the IR remote control.
+If this option is checked, [idle patterns](#basic-operation) 0 through 3 (with or without adaption to TCD-provided speed) will only consist of patterns extracted from the movies (plus some interpolations). If this option is unchecked, random variations will be shown, which is less accurate, but also less monotonous. Purists will want this option to be set, which is also the default. This option can also be changed by typing ```*60ok``` on the IR remote control.
 
-This option setting, along with the current idle pattern, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
+This option setting, along with the current idle pattern number, is only saved if there is an SD card present. Without an SD card, this setting is always reset to "checked" upon power-up.
 
 ##### &#9193; Skip time tunnel animation
 
@@ -708,9 +713,9 @@ The Screen Saver, when active, disables all LEDs, until
 
 If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here. Hostname is preferred because it makes the setup independent of the network environment.
 
-##### &#9193; Adapt pattern to TCD-provided speed
+##### &#9193; Adapt patterns 0-3 to TCD-provided speed
 
-If this option is checked and your TCD is equipped with a GPS sensor or a rotary encoder, or a [Futaba Remote](https://remote.out-a-ti.me) is present, the SID will adapt its display pattern to current speed as transmitted by the TCD.
+If this option is checked and your TCD is equipped with a GPS receiver or a rotary encoder, or a [Futaba Remote](https://remote.out-a-ti.me) is present, the SID will adapt its [idle patterns](#basic-operation) 0 through 3 to current speed as transmitted by the TCD.
 
 ##### &#9193; Follow TCD night-mode
 
