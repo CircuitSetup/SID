@@ -140,6 +140,10 @@ Your SID comes with an IR remote control included. This remote works out-of-the-
 |:--:| 
 | *The SID's standard IR remote control* |
 
+Control through the IR remote works through single-key presses and command sequences.
+- Single key actions are triggered by pressing key ```0```-```9```, ```Arrow up```, ```Arrow down```, ```Arrow left``` or ```Arrow right```.
+- Command sequences are started by pressing ```*``` followed by a numerical code, and concluded by ```ok```. ```#``` aborts command sequence entry (for example, in case of mistyping).
+
 Each time you press a key on the remote, an IR feedback LED will briefly light up. This LED is located at the bottom of the circuit board.
 
 Apart from the feedback LED, your SID will also show some feedback signals on its main display:
@@ -160,7 +164,7 @@ IR learning can be initiated by entering ```*987654ok``` on the standard IR remo
 
 >Alternatively, IR learning can be started by pressing and holding a connected [Time Travel](#time-travel) button for a few seconds (while the option **_TCD connected by wire_** in the Config Portal is unchecked).
 
-When IR learning is started, the SID stops what is currently doing and the display guides you through the learning process by showing the key to press next. Each key is prompted twice to sort out unsuitable remote controls. The process starts by showing "0" (and the left half of the red LED row). At this point, press ```0``` on your IR remote control. Next, the SID will show "0" again, this time with the right half of the red LED row. Now press ```0``` again. If the received IR codes match, the SID will proceed to the next key. If a key fails verification, ie if the codes sent on first and second key press don't match, the SID will abort and show "ERROR".
+When IR learning is started, the SID stops what it is currently doing and the display guides you through the learning process by showing the key to press next. Each key is prompted twice to sort out unsuitable remote controls. The process starts by showing "0" (and the left half of the red LED row). At this point, press ```0``` on your IR remote control. Next, the SID will show "0" again, this time with the right half of the red LED row. Now press ```0``` again. If the received IR codes match, the SID will proceed to the next key. If a key fails verification, ie if the codes sent on first and second key press don't match, the SID will abort and show "ERROR".
 
 The keys are prompted in the following order:
 
@@ -558,7 +562,7 @@ In order to reduce the number of write operations and thereby prolong the life o
 
 ## Firmware Installation / Firmware Update
 
-If a previous version of the SID firmware is installed on your device, you can update easily using the pre-compiled binary. Enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases), and click on *Update*.
+To update the firmware of your SID, enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases) and click on *Update*.
 
 <details>
 <summary>Installing on a fresh ESP32...</summary>
@@ -696,7 +700,7 @@ See [here](#appendix-b-led-signals) for all supported signals.
 
 ##### &#9193; Show IR command entry feedback on display
 
-If this option is checked, your SID will, upon pressing * on the IR remote control, show command sequence entry progress by lighting up another red LED on each key pressed. This setting can also be toggled by ```*63ok```.
+If this option is checked, your SID will, upon pressing ```*``` on the IR remote control, show command sequence entry progress by lighting up another red LED on each key pressed. This setting can also be toggled by ```*63ok```.
 
 ##### &#9193; Screen saver timer
 
@@ -808,29 +812,24 @@ Signals are shown in the top two rows of the display.
 
 <table>
     <tr>
-     <td align="left">&#9679; &#9679; &#9679; &#9679; &#9675; &#9675; &#9679; &#9679; &#9679; &#9679;<br>
-                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
-     <td align="left">Successful input from IR (optional)</td>
+     <td align="left"><img src="img/s_pir.png" width=200></td>
+     <td align="left">IR command sequence execution successful</td>
     </tr>
     <tr>
-     <td align="left">&#9675; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9675;<br>
-                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
-     <td align="left">Bad/unsuccessful input from IR</td>
+     <td align="left"><img src="img/s_bir.png" width=200></td>
+     <td align="left">Bad/unsuccessful command sequence</td>
     </tr>
     <tr>
-     <td align="left">&#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9675;<br>
-                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
+     <td align="left"><img src="img/s_kprs.png" width=200></td>
      <td align="left"><a href='#remote-controlling-the-tcds-keypad'>TCD-keypad remote control mode</a> started</td>
     </tr>
     <tr>
-     <td align="left">&#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9679; &#9675; &#9675;<br>
-                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
+     <td align="left"><img src="img/s_kpre.png" width=200></td>
      <td align="left"><a href='#remote-controlling-the-tcds-keypad'>TCD-keypad remote control mode</a> ended</td>
     </tr>
     <tr>
-     <td align="left">&#9675; &#9679; &#9675; &#9679; &#9675; &#9679; &#9675; &#9679; &#9675; &#9679;<br>
-                      &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675; &#9675;</td>
-     <td align="left">Firmware update available; shown briefly at power-up (optional)</td>
+     <td align="left"><img src="img/s_upd.png" width=200></td>
+     <td align="left">Firmware update available. Shown briefly at power-up.</td>
     </tr>
 </table>
 
