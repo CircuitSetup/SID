@@ -141,13 +141,13 @@ Your SID comes with an IR remote control included. This remote works out-of-the-
 | *The SID's standard IR remote control* |
 
 Control through the IR remote works through single-key presses and command sequences.
-- Single key actions are triggered by pressing key ```0```-```9```, ```Arrow up```, ```Arrow down```, ```Arrow left``` or ```Arrow right```.
+- Single key actions are triggered by pressing keys ```0```-```9```, ```Arrow up```, ```Arrow down```, ```Arrow left``` or ```Arrow right```.
 - Command sequences are started by pressing ```*``` followed by a numerical code, and concluded by ```ok```. ```#``` aborts command sequence entry (for example, in case of mistyping).
 
 Each time you press a key on the remote, an IR feedback LED will briefly light up. This LED is located at the bottom of the circuit board.
 
 Apart from the feedback LED, your SID will also show some feedback signals on its main display:
-- By default, when initiating a command sequence by pressing ```*```, SID will start to show each key pressed afterwards by lighting up another red LED. This kind of feedback can be disabled using command sequence ```*63ok``` or in the Config Portal.
+- By default, when initiating a command sequence by pressing ```*```, SID will clear the top-most row of red LEDs and acknowledge each key pressed afterwards by lighting up another red LED. This kind of feedback can be disabled using command sequence ```*63ok``` or in the Config Portal.
 - By default, after executing a command, SID will show a "success" signal. This kind of feedback can be disabled using command sequence ```*62ok``` or in the Config Portal.
 - If a command was unsuccessful or not recognized, a "bad input" signal will be shown.
 
@@ -178,7 +178,7 @@ To make the SID forget a learned IR remote control, type ```*654321ok```.
 
 ### Locking IR Control
 
-You can have your SID ignore IR commands from any IR remote control (be it the supplied standard one, be it one you had your SID learn) by entering ```*71ok```. After this sequence, the SID will ignore all IR commands until ```*71ok``` is entered again. The purpose of this function is to enable you to use the same remote for your SID and other props.
+You can have your SID ignore IR commands from any IR remote control (be it the supplied one, be it one you had your SID learn) by entering ```*71ok```. After this sequence, the SID will ignore all IR commands until ```*71ok``` is entered again. The purpose of this function is to enable you to use the same remote for your SID and other props.
 
 The status of the IR lock is saved 10 seconds after its last change, and is persistent across reboots.
 
@@ -191,24 +191,24 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="center" colspan="3">Single key actions</td>
     </tr>
     <tr>
-     <td align="center"><code>1</code><br>Games: New game</td>
-     <td align="center"><code>2</code><br>-</td>
-     <td align="center"><code>3</code><br>-</a></td>
+     <td align="center"><code>1</code><br>Games: New game<br><br></td>
+     <td align="center"><code>2</code><br>-<br><br></td>
+     <td align="center"><code>3</code><br>-<br><br></a></td>
     </tr>
     <tr>
-     <td align="center"><code>4</code><br>-</td>
-     <td align="center"><code>5</code><br>Games: Pause</td>
-     <td align="center"><code>6</code><br>-</td>
+     <td align="center"><code>4</code><br>-<br><br></td>
+     <td align="center"><code>5</code><br>Games: Pause<br><br></td>
+     <td align="center"><code>6</code><br>-<br><br></td>
     </tr>
     <tr>
-     <td align="center"><code>7</code><br>-</td>
-     <td align="center"><code>8</code><br>-</td>
-     <td align="center"><code>9</code><br>Games: Quit</td>
+     <td align="center"><code>7</code><br>-<br><br></td>
+     <td align="center"><code>8</code><br>-<br><br></td>
+     <td align="center"><code>9</code><br>Refill Plutonium<sup>2</sup><br>Games: Quit</td>
     </tr>
     <tr>
-     <td align="center"><code>*</code><br>Start command sequence</td>
+     <td align="center"><code>*</code><br>Start command sequence<br><br></td>
      <td align="center"><code>0</code><br><a href="#time-travel">Time Travel</a><br>Siddly: Fall down</td>
-     <td align="center"><code>#</code><br>Abort command sequence</td>
+     <td align="center"><code>#</code><br>Abort command sequence<br><br></td>
     </tr>
     <tr>
      <td align="center"></td>
@@ -342,7 +342,8 @@ In order to only disable the supplied IR remote control, check the option **_Dis
     </tr>
 </table>
 
-1: Not supported through HA/MQTT [_INJECT_](#the-inject_x-command) command
+1: Not supported through HA/MQTT [_INJECT_](#the-inject_x-command) command<br/>
+2: Refills the "Plutonium Chamber". Requires TCD (3.27+) and [Dash Gauges](https://dg.out-a-ti.me).
 
 [Here](CheatSheet.pdf) is a cheat sheet for printing or screen-use.
 
@@ -407,7 +408,7 @@ BTTFN requires the props all to be connected to the same network, such as, for e
 
 </details>
 
-To connect your SID to the TCD, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname or IP address of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. 
+To connect your SID to the TCD, just enter the TCD's hostname - usually "timecircuits" - in the **_Hostname of TCD_** field in the SID's Config Portal. On the TCD, no special configuration is required. 
 
 Afterwards, the SID and the TCD can communicate wirelessly and 
 - play time travel sequences in sync,
@@ -428,7 +429,7 @@ To start TCD keypad remote control, type ```*96ok``` on the SID's IR remote cont
 
 Keys ```0```-```9``` as well as ```ok``` (= ```ENTER``` on the TCD) on your IR remote control will now be registered by the TCD as key presses.
 
-"Holding" a key on the TCD keypad is emulated by pressing ```*``` followed by the key, for instance ```*1``` (to toggle the TCD alarm). Holding ```ok``` (= ```ENTER```) is only accepted by the TCD to stop the alarm, but not for entering the keypad menu.
+"Holding" a key on the TCD keypad is emulated by pressing ```*``` followed by the key, for instance ```*1``` to toggle the TCD alarm. ```*ok``` (= holding ```ENTER```) is only accepted by the TCD to stop the alarm, but not for entering the keypad menu.
 
 Pressing ```#``` quits TCD keypad remote control mode, as does issuing command ```6097``` on the TCD or through HA/MQTT.
 
@@ -532,7 +533,7 @@ This configuration can easily be achieved by putting both the TCD and the SID in
 #### SID
 
 One-time configuration steps:
-- Enter the Config Portal on the SID, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname or IP address of TCD_** under *Wireless communication (BTTF-Network)* settings; do not use an IP address.
+- Enter the Config Portal on the SID, click on *Settings* and check that the hostname of the TCD (usually "timecircuits") is present in the  **_Hostname of TCD_** under *Wireless communication (BTTF-Network)* settings.
 - Furthermore, on the *WiFi Configuration* page, check that the TCD's WiFi network name (SSID; usually "TCD-AP") and password (if the TCD is configured with a password) are present under *Car mode settings*.
 
 If everything is in place, you can enable Car mode on the SID by typing ```*991ok``` on the remote. The SID will reboot and attempt to connect to the TCD's AP.
@@ -609,7 +610,7 @@ To connect your SID to your WiFi network, all you need to do is either to click 
 
 >By default, the SID requests an IP address via DHCP. However, you can also configure a static IP for the SID by entering the IP, netmask, gateway and DNS server. All four fields must be filled for a valid static IP configuration. If you want to stick to DHCP, leave those four fields empty. 
 
-If there are several APs with identical SSID nearby, the SID will connect to the first one it finds, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
+If there are several APs with identical SSID nearby, the SID will connect to the first one it finds, which might not be the one with the strongest signal. It is therefore recommended to select the nearest/strongest AP by its BSSID (AP's MAC address, a unique identifier for a specific AP). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for Networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
 ##### &#9193; Forget Saved WiFi Network
 
@@ -621,7 +622,8 @@ In Car mode, the device connects to the TCD-AP as configured here instead of the
 
 Enter your TCD's network name (usually "TCD-AP") in **_Network name (SSID) of TCD-AP_** and the TCD's AP password (if configured on the TCD) in **_Password for TCD-AP_**. 
 
->In the unlikely case that multiple TCD's are in range, you can single out your TCD by its BSSID. The TCD displays its BSSID on its *WiFi Configuration* page.
+The **_TCD-AP BSSID_** field is optional for you to fill out. The TCD displays its BSSID (unique access point identifier) on its *WiFi Configuration* page, so you could copy it into this field on your SID. If the _TCD-AP BSSID_ field is left empty, it will be filled out automatically upon the first successful connection to your TCD in Car Mode. This pairs your SID to your TCD and avoids connecting to other people's TCDs at meet-ups with other cars nearby.
+> If you ever need to connect your SID to a different TCD (or, for instance, swap out your TCD's circuit board), this field needs to be cleared in order to pair your SID to the new TCD. Note that if the SID fails to connect to a BSSID-identified TCD, it will boot into [AP-Mode](#connecting-to-a-wifi-network) ("SID-AP").
 
 If you want to enter Car mode immediately after saving your settings, check **_Enable car mode now_**. You can also later enable Car mode by typing ```*991ok``` on the remote. ```*990ok``` disables Car mode.
 
@@ -713,23 +715,23 @@ The Screen Saver, when active, disables all LEDs, until
 
 #### <ins>Settings for BTTFN communication</ins>
 
-##### &#9193; Hostname or IP address of TCD
+##### &#9193; Hostname of TCD
 
-If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - or IP address here. Hostname is preferred because it makes the setup independent of the network environment.
+If you want to have your SID to communicate with a Time Circuits Display wirelessly ("BTTF-Network"), enter the TCD's hostname - usually 'timecircuits' - here. Although specifying the TCD's IP address is supported as well, the hostname is preferred because it makes your setup independent of the network environment.
 
 ##### &#9193; Adapt patterns 0-3 to TCD-provided speed
 
 If this option is checked and your TCD is equipped with a GPS receiver or a rotary encoder, or a [Futaba Remote](https://remote.out-a-ti.me) is present, the SID will adapt its [idle patterns](#basic-operation) 0 through 3 to current speed as transmitted by the TCD.
 
+##### &#9193; Follow TCD fake power
+
+If this option is checked, and your TCD is equipped with a fake power switch, the SID will also fake-power up/down. If fake power is off, no LED is active and the SID will ignore all input from buttons and the IR control.
+
 ##### &#9193; Follow TCD night-mode
 
 If this option is checked, and your TCD goes into night mode, the SID will activate the Screen Saver with a very short timeout. 
 
-##### &#9193; Follow TCD fake power
-
-If this option is checked, and your TCD is equipped with a fake power switch, the SID will also fake-power up/down. If fake power is off, no LED is active and the SID will ignore all input from buttons, knobs and the IR control.
-
-##### &#9193; '0' and button trigger BTTFN-wide TT
+##### &#9193; '0' and button trigger BTTFN-wide Time Travel
 
 If the SID is connected to a TCD through BTTFN, this option allows to trigger a synchronized time travel on all BTTFN-connected devices when pressing ```0``` on the IR remote control or pressing the external Time Travel button, just as if the Time Travel was triggered by the TCD. If this option is unchecked, pressing ```0``` or the Time Travel button only triggers a Time Travel sequence on the SID.
 
@@ -745,7 +747,7 @@ This option selects whether the clock should be switched off in night mode, or n
 
 ##### &#9193; TCD connected by wire
 
-Check this if you have a Time Circuits Display connected by wire. Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
+Check this if you have a Time Circuits Display connected to the SID by wire. Note that a wired connection only allows for synchronized time travel sequences, no other communication takes place.
 
 While you can connect both a button and the TCD to the "time travel" connector on the SID, the button should not be pressed when this option is set, as it might yield unwanted effects.
 
