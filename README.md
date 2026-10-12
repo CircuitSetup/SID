@@ -19,19 +19,20 @@ Features include
 - [Wireless communication](#bttf-network-bttfn) with [Time Circuits Display](https://circuitsetup.us/product/complete-time-circuits-display-kit/); used for synchronized time travels, speed-adapted patterns, alarm, night mode, fake power, remote control of SID through TCD keypad and [remote controlling](#remote-controlling-the-tcds-keypad) the TCD keypad.
 - [Home Assistant](#home-assistant--mqtt) (MQTT) support
 - [*Siddly*](#siddly) and [*Snake*](#snake) games
-- [SD card](#sd-card) support
 - built-in OTA installer for firmware updates
 - &#128007; &#129370; &#129370; &#127381;
 
->This [repository](https://sid.out-a-ti.me) is the upstream source for CircuitSetup's releases. The only difference is that both code and documentation [here](https://sid.out-a-ti.me) might be ahead in development.
+>The [A10001986 repository](https://sid.out-a-ti.me) is the upstream source for CircuitSetup's releases. There are no differences between A10001986 and CircuitSetup releases of the same version.
 
 For information on updating the firmware of your SID, see [here](#firmware-installation--firmware-update).
 
 ## Initial Configuration
 
->The following instructions only need to be followed once, on fresh SIDs. They do not need to be repeated after a firmware update.
+**Some features of your SID require an SD card.** The first step is therefore to put a **good-quality** ("endurance", "industrial", "long life", ...) **and empty microSD card into the card slot**. The SD card must be inserted before powering up the SID. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the SID is powered.
 
-The first step is to establish access to the SID's configuration website ("Config Portal") in order to configure your SID:
+>SD/SDHC/SDXC cards up to 32GB are supported. The card needs to be FAT32-formatted (not exFAT). Transcend, Sandisk Ultra and Industrial, Verbatim Premium and Samsung Pro Endurance SDHC cards usually work fine. Some SD cards might not be recognized due to off-specs initialization quirks. SDUC cards are not supported.
+
+The second step is to establish access to the SID's configuration website ("Config Portal") in order to configure your SID:
 
 - Power up your SID and wait a few seconds.
 - Connect your computer or handheld device to the WiFi network "SID-AP".
@@ -71,7 +72,7 @@ Click on "WiFi Configuration" and either select a network from the top of the pa
   
 >If there are several APs with identical SSID nearby, you can select a specific AP by its BSSID (AP's MAC address). You can either manually find out your AP's BSSID and enter it or have it filled out automatically: Click "Scan for networks", then "Show all". If you click on an AP, its BSSID will be copied into BSSID field in the form below. To see which AP is which, hover over the name to see its BSSID as a tooltip.
 
->Your SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until it has completed its startup sequence, then type ```*123456ok``` on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
+>Your SID requests an IP address via DHCP, unless you entered valid data in the fields for static IP addresses (IP, gateway, netmask, DNS). If the device is inaccessible as a result of incorrect static IPs, wait until it has completed its startup sequence, then type ```*123456ok```<!--```*123457ok```--> on the IR remote; static IP data will be deleted and the device will return to DHCP after a reboot.
 
 </details>
 
@@ -332,6 +333,16 @@ In order to only disable the supplied IR remote control, check the option **_Dis
      <td align="left">Delete static IP address<br>and WiFi-AP password<sup>1</sup></td>
      <td align="left"><code>*123456ok</code></td><td><code>6123456</code></td>
     </tr>
+       <!--
+     <tr>
+     <td align="left">Delete SID-AP password<sup>1</sup></td>
+     <td align="left"><code>*123456ok</code></td><td><code>6123456</code></td>
+     </tr>
+    <tr>
+     <td align="left">Delete static IP configuration<sup>1</sup></td>
+     <td align="left"><code>*123457ok</code></td><td><code>6123457</code></td>
+     </tr>
+       -->
     <tr>
      <td align="left">Start IR remote <a href="#ir-learning">learning process</a><sup>1</sup></td>
      <td align="left"><code>*987654ok</code></td><td><code>6987654</code></td>
@@ -374,14 +385,6 @@ Siddly is a simple game where puzzle pieces of various shapes fall down from the
 ### Snake
 
 Snakes like apples (at least so I have heard). You control a snake that feels a profound urge to eat apples. After each eaten apple, the snake grows, and a new apple appears. Unfortunately, snakes don't like to hit their heads, so you need to watch out that the snake's head doesn't collide with its body.
-
-## SD Card
-
->Only SD/SDHC/SDXC cards up to 32GB are supported. Card needs to be FAT32-formatted (not exFAT). Transcend, Sandisk Ultra (as of firmware version 1.74) and Industrial, Verbatim Premium and Samsung Pro Endurance SDHC cards usually work fine. Some SD cards might not be recognized due to off-specs initialization quirks. SDUC cards are not supported.
-
-The SD card is used for saving [secondary settings](#-save-secondary-settings-on-sd), to avoid [Flash Wear](#flash-wear) on the SID's CPU. For instance, the chosen idle pattern (```*1x```), and the running state of the Spectrum Analyzer, is only stored on SD, so for your selection to be persistent across reboots, an SD card is required.
-
-The SD card must be inserted before powering up the device. It is not recognized if inserted while the SID is running. Furthermore, do not remove the SD card while the device is powered.
 
 ## Connecting a Time Circuits Display
 
@@ -555,22 +558,29 @@ After WiFi has been switched off due to timer expiration, it can be re-enabled b
 
 > This command is also used to trigger a re-connection attempt in case your configured WiFi network was not available when the SID was trying to connect, see [here](#home-setup-with-a-pre-existing-local-wifi-network).
 
-## Flash Wear
-
-Flash memory has a somewhat limited lifetime. It can be written to only between 10.000 and 100.000 times before becoming unreliable. The firmware writes to the internal flash memory when saving settings and other data. Every time you change settings, data is written to flash memory.
-
-In order to reduce the number of write operations and thereby prolong the life of your SID, it is recommended to use a good-quality SD card and to check **_["Save secondary settings on SD"](#-save-secondary-settings-on-sd)_** in the Config Portal; some settings as well as learned IR codes are then stored on the SD card (which also suffers from wear but is easy to replace). See [here](#-save-secondary-settings-on-sd) for more information.
-
 ## Firmware Installation / Firmware Update
 
-To update the firmware of your SID, enter the [Config Portal](#the-config-portal), click on "Update", select the pre-compiled binary file ("**sid-A10001986-Vx.xx.bin**" or "**SID_vX.YY.bin**") provided in the [Release package](https://github.com/realA10001986/SID/releases) and click on *Update*.
+To update the firmware of your SID, 
+- download the firmware file provided in the [Release package](https://github.com/realA10001986/SID/releases/latest) ("**sid-A10001986-Vx.xx.bin**" for A10001986 releases, "**SID_vX.YY.bin**" for CircuitSetup releases)
+- enter the [Config Portal](#the-config-portal),
+- click on "Update",
+- select the downloaded firmware file in the _top_ file selector, and
+- click on *Update*.
 
 <details>
 <summary>Installing on a fresh ESP32...</summary>
 If you are using a fresh ESP32, please go <a href="https://install.out-a-ti.me">here</a> and follow the instructions, or - if you are a nerd and want to deal with source code, compilers'n'stuff - see _sid-A10001986.ino_ for detailed build and upload information.
 </details>
 
-*After a firmware update, a "wait" symbol (hourglass) might be shown for a short while after reboot. Do NOT unplug the device during this time.*
+<!--
+## Factory Reset
+
+To reset your SID to factory default settings, issue command sequence ```*697159ok``` twice in a row. 
+
+Since any configured WiFi connection is deleted as well, the SID will reboot in AP-mode.
+
+-->
+
 
 ---
 
@@ -649,7 +659,7 @@ By default, when your SID creates a WiFi network of its own ("AP-mode"), this ne
 
 By default, and if this field is empty, the SID's own WiFi network ("SID-AP") will be unprotected. If you want to protect your SID access point, enter your password here. It needs to be 8 characters in length and only characters A-Z, a-z, 0-9 and - are allowed.
 
-If you forget this password and are thereby locked out of your SID, enter ```*123456ok``` on the IR remote control; this deletes the WiFi password. Then power-down and power-up your SID and the access point will start unprotected.
+If you forget this password and are thereby locked out of your SID, enter ```*123456ok``` on the IR remote control; this deletes the WiFi password. Then power-down and power-up your SID and the access point will start unprotected.<!-- automatic reboot-->
 
 ##### &#9193; WiFi channel
 
@@ -763,18 +773,14 @@ If your SID is connected wirelessly, this option has no effect.
 
 ##### &#9193; Save secondary settings on SD
 
-If this is checked, secondary settings (brightness, IR lock status, learned IR keys) are stored on the SD card (if one is present). This helps to minimize write operations to the internal flash memory and to prolong the lifetime of your SID. See [Flash Wear](#flash-wear).
+_Please leave this option checked. It is safe to have this option checked even with no SD card present._
 
-Apart from Flash Wear, there is another reason for using an SD card for settings: Writing data to internal flash memory can cause delays of up to 1.5 seconds, which interrupt sequences and have other undesired effects. The SID needs to save data from time to time, so for a smooth experience without unexpected and unwanted delays, please use an SD card and check this option.
-
-It is safe to have this option checked even with no SD card present.
+If this is checked, some settings are stored on the SD card. This helps to minimize write operations to the internal flash memory and to prolong the lifetime of your SID. Apart from Flash Wear, there is another reason for using an SD card for settings: The SID needs to save data from time to time. Writing data to internal flash memory can cause delays of up to 1.5 seconds, which might have undesired effects.
 
 If you want copy settings from one SD card to another, do as follows:
 - With the old SD card still in the slot, enter the Config Portal, turn off _Save secondary settings on SD_, and click "SAVE".
 - After the SID has rebooted, power it down, and swap the SD card for your new one.
 - Power-up the SID, enter the Config Portal, re-enable _Save secondary settings on SD_, and click "SAVE".
-
-This procedure ensures that all your settings are copied from the old to the new SD card.
 
 #### <ins>Hardware configuration settings</ins>
 
@@ -837,4 +843,5 @@ Signals are shown in the top two rows of the display.
 
 ---
 _Text & images: (C) Thomas Winischhofer ("A10001986"). See LICENSE._ [Source](https://sid.out-a%2dti.me)  
+_No generative AI or automated code-completion tools were used in the development of this project._   
 _Other props: [Time Circuits Display](https://tcd.out-a%2dti.me) ... [Flux Capacitor](https://fc.out-a%2dti.me) ... [Dash Gauges](https://dg.out-a%2dti.me) ... [VSR](https://vsr.out-a%2dti.me) ... [Remote Control](https://remote.out-a%2dti.me) ... [TFC](https://tfc.out-a%2dti.me) ... [Jukebox](https://jb.out-a%2dti.me)_
